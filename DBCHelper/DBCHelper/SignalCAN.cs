@@ -39,9 +39,9 @@ namespace DBCHelper
         public string MessageName { get; set; }
         public uint ID { get; set; }
 
-        public int StartBit { get; set; }
+        public uint StartBit { get; set; }
 
-        public int Length { get; set; }
+        public uint Length { get; set; }
 
         public EByteOrder ByteOrder { get; set; }
 
