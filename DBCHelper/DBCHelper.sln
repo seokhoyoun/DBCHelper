@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBCHelper", "DBCHelper\DBCHelper.csproj", "{090DEEB1-921D-4EE7-801C-216A38E63D7A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{090DEEB1-921D-4EE7-801C-216A38E63D7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{090DEEB1-921D-4EE7-801C-216A38E63D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{090DEEB1-921D-4EE7-801C-216A38E63D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{090DEEB1-921D-4EE7-801C-216A38E63D7A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {85523F89-2186-444C-B340-7726E4C76E99}
+	EndGlobalSection
+EndGlobal
