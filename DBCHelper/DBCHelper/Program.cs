@@ -7,6 +7,10 @@ namespace DBCHelper
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+
+            DBCParser parser = new DBCParser();
+
+            parser.LoadFile();
         }
     }
 }

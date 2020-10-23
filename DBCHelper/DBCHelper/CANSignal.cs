@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DBCHelper
+﻿namespace DBCHelper
 {
     public enum EByteOrder
     {
@@ -20,22 +16,16 @@ namespace DBCHelper
     {
         IntegerType,
         FloatType,
+        DoubleType,
         StringType
     }
 
-    public enum EAccessType
-    {
-        Unrestricted,
-        Read,
-        Write,
-        ReadWrite
-    }
-
-    public class SignalCAN
+    public class CANSignal
     {
         public string NetworkNode { get; set; }
+
         public string SignalName { get; set; }
-        
+
         public string MessageName { get; set; }
         public uint ID { get; set; }
 
@@ -47,17 +37,14 @@ namespace DBCHelper
 
         public EValueType ValueType { get; set; }
 
-        public double Maximum { get; set;}
+        public double Maximum { get; set; }
 
-        public double Minimum { get; set;}
+        public double Minimum { get; set; }
 
         public double InitialValue { get; set; }
 
         public string Unit { get; set; }
 
         public string Comment { get; set; }
-
-
-
     }
 }
