@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -60,12 +61,81 @@ namespace DBCHelper
 
                 if(rawLine.StartsWith("BO_"))
                 {
-                    string[] receivedMessageInfo = rawLine.Split(' ');
+                    string[] receivedMessageData = rawLine.Split(' ');
 
                     CANMessage message = new CANMessage();
-                    message.ID = uint.Parse(receivedMessageInfo[1]);
-                    message.MessageName = receivedMessageInfo[2].Remove(receivedMessageInfo.Length - 1, 1);
-                    message.DLC = byte.Parse(receivedMessageInfo[3]);
+                    message.ID = uint.Parse(receivedMessageData[1]);
+                    message.MessageName = receivedMessageData[2];
+                    message.DLC = byte.Parse(receivedMessageData[3]);
+                    message.Transmitter = receivedMessageData[4];
+
+                    rawLine = streamReader.ReadLine();
+
+                    while(rawLine.StartsWith(" SG_"))
+                    {
+                        string[] receivedSignalData = rawLine.Split(' ');
+
+                        CANSignal signal = new CANSignal();
+                        signal.ID = message.ID;
+                        signal.MessageName = message.MessageName;
+                        signal.SignalName = receivedSignalData[2];
+
+                        string[] bitInfoData  = receivedSignalData[4].Split(new char[] { '|', '@' });
+
+                        signal.StartBit = uint.Parse( bitInfoData[0]);
+                        signal.Length = uint.Parse(bitInfoData[1]);
+
+                        switch (bitInfoData[2])
+                        {
+                            case "0-":
+                                signal.ByteOrder = EByteOrder.Motorola;
+                                signal.ValueType = EValueType.SignedType;
+                                break;
+
+                            case "0+":
+                                signal.ByteOrder = EByteOrder.Motorola;
+                                signal.ValueType = EValueType.UnsignedType;
+                                break;
+
+                            case "1-":
+                                signal.ByteOrder = EByteOrder.Intel;
+                                signal.ValueType = EValueType.SignedType;
+                                break;
+
+                            case "1+":
+                                signal.ByteOrder = EByteOrder.Intel;
+                                signal.ValueType = EValueType.UnsignedType;
+                                break;
+
+                            default:
+                                Debug.Assert(false);
+                                break;
+                        }
+
+                        string[] offsetAndFactorData = receivedSignalData[5].Split(new char[] { '(', ',', ')' });
+                        signal.Factor = double.Parse(offsetAndFactorData[1]);
+                        signal.Offset = double.Parse(offsetAndFactorData[2]);
+
+                        string[] minAndMaxData = receivedSignalData[6].Split(new char[] { '[', '|', ']' });
+                        signal.Minimum = double.Parse(minAndMaxData[1]);
+                        signal.Maximum = double.Parse(minAndMaxData[2]);
+
+                        string[] unitData = receivedSignalData[7].Split(new char[] { '"'});
+                        signal.Unit = unitData[1];
+
+                        if(receivedSignalData.Length > 9)
+                        {
+                            signal.ReceiverName = receivedSignalData[9];
+                        }
+
+                        message.SignalLIst.Add(signal);
+
+                        rawLine = streamReader.ReadLine();
+                    }
+
+                    MessageDictionary.Add(message.ID, message);
+
+                    
                 }
             }
 

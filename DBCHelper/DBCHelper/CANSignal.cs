@@ -41,9 +41,17 @@
 
         public double Minimum { get; set; }
 
+        public double Offset { get; set; }
+
+        public double Factor { get; set; }
+
         public double InitialValue { get; set; }
 
         public string Unit { get; set; }
+
+        public string ReceiverName { get; set; }
+
+        public string Transmitter { get; set; }
 
         public string Comment { get; set; }
     }

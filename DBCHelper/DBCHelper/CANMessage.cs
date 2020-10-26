@@ -24,6 +24,19 @@ namespace DBCHelper
             set;
         }
 
+        public string Transmitter
+        {
+            get;
+            set;
+        }
+
+        public List<CANSignal> SignalLIst
+        {
+            get;
+            set;
+        } = new List<CANSignal>();
+
+
         public byte[] Data
         {
             get;
