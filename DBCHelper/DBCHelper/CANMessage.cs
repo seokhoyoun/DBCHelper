@@ -43,5 +43,12 @@ namespace DBCHelper
             set;
         }
 
+        public string Comment 
+        {
+            get;
+            set;
+        }
+        
+
     }
 }

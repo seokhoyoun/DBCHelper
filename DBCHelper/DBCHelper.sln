@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBCHelper", "DBCHelper\DBCHelper.csproj", "{090DEEB1-921D-4EE7-801C-216A38E63D7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBCHelper", "DBCHelper\DBCHelper.csproj", "{090DEEB1-921D-4EE7-801C-216A38E63D7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBCHelperWpf", "DBCHelperWpf\DBCHelperWpf.csproj", "{59A90F8D-CFDF-44C9-BEA4-3D5A32CAAAA8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{090DEEB1-921D-4EE7-801C-216A38E63D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{090DEEB1-921D-4EE7-801C-216A38E63D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{090DEEB1-921D-4EE7-801C-216A38E63D7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59A90F8D-CFDF-44C9-BEA4-3D5A32CAAAA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59A90F8D-CFDF-44C9-BEA4-3D5A32CAAAA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59A90F8D-CFDF-44C9-BEA4-3D5A32CAAAA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59A90F8D-CFDF-44C9-BEA4-3D5A32CAAAA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

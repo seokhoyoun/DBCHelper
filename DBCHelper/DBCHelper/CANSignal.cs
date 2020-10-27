@@ -1,4 +1,6 @@
-﻿namespace DBCHelper
+﻿using System.Collections.Generic;
+
+namespace DBCHelper
 {
     public enum EByteOrder
     {
@@ -54,5 +56,7 @@
         public string Transmitter { get; set; }
 
         public string Comment { get; set; }
+
+        public List<CANAttribute> SignalAttributeList {get; set;}
     }
 }

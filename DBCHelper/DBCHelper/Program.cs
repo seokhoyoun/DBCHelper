@@ -11,6 +11,14 @@ namespace DBCHelper
             DBCParser parser = new DBCParser();
 
             parser.LoadFile();
+
+            var messages = parser.MessageDictionary;
+
+            var nodes = parser.NetworkNodeDictionary;
+
+            var attribute = new CANAttribute();
+
+            
         }
     }
 }
