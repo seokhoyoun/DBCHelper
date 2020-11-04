@@ -24,23 +24,24 @@ namespace DBCHelper
             set;
         }
 
-        public List<CANAttribute> AttributeList
+        public Dictionary<string, CANAttribute> AttributeDictionary
         {
             get;
             set;
         }
 
-        
+
 
         #endregion
 
         #region Private Field
 
-        private const string NODE_IDENTIFIER = "BU_:";
+        private const string NODE_IDENTIFIER = "BU_";
         private const string MESSAGE_IDENTIFIER = "BO_";
         private const string COMMENT_IDENTIFIER = "CM_";
         private const string SIGNAL_IDENTIFIER = "SG_";
 
+        private const string ATTRIBUTE_VALUE_IDENTIFIER = "BA_";
         private const string ATTRIBUTE_DEF_IDENTIFIER = "BA_DEF_";
         private const string ATTRIBUTE_DEF_DEFAULT_IDENTIFIER = "BA_DEF_DEF_";
 
@@ -54,7 +55,7 @@ namespace DBCHelper
         {
             NetworkNodeDictionary = new Dictionary<string, List<CANSignal>>();
             MessageDictionary = new Dictionary<uint, CANMessage>();
-            
+            AttributeDictionary = new Dictionary<string, CANAttribute>();
 
             mPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\\dbcsamp.dbc";
         }
@@ -156,23 +157,23 @@ namespace DBCHelper
 
                         message.SignalLIst.Add(signal);
 
-                        if(NetworkNodeDictionary.ContainsKey(signal.Transmitter))
+                        if (NetworkNodeDictionary.ContainsKey(signal.Transmitter))
                         {
                             NetworkNodeDictionary[signal.Transmitter].Add(signal);
                         }
 
-                        if(NetworkNodeDictionary.ContainsKey(signal.ReceiverName))
+                        if (NetworkNodeDictionary.ContainsKey(signal.ReceiverName))
                         {
                             NetworkNodeDictionary[signal.ReceiverName].Add(signal);
                         }
 
-                        if(signal.ReceiverName.Contains(','))
+                        if (signal.ReceiverName.Contains(','))
                         {
                             string[] nodeData = signal.ReceiverName.Split(',');
 
                             foreach (var receiverName in nodeData)
                             {
-                                if(NetworkNodeDictionary.ContainsKey(receiverName))
+                                if (NetworkNodeDictionary.ContainsKey(receiverName))
                                 {
                                     NetworkNodeDictionary[receiverName].Add(signal);
                                 }
@@ -183,7 +184,7 @@ namespace DBCHelper
                     }
 
                     MessageDictionary.Add(message.ID, message);
-                    
+
 
                     continue;
                 }
@@ -233,55 +234,151 @@ namespace DBCHelper
                     }
                 }
 
-                if(rawLine.StartsWith(ATTRIBUTE_DEF_IDENTIFIER) && !rawLine.StartsWith(ATTRIBUTE_DEF_DEFAULT_IDENTIFIER))
+                if (rawLine.StartsWith(ATTRIBUTE_DEF_IDENTIFIER) && !rawLine.StartsWith(ATTRIBUTE_DEF_DEFAULT_IDENTIFIER))
                 {
                     string[] attributeData = rawLine.Split(' ');
                     CANAttribute tempAttribute = new CANAttribute();
 
-                    switch (attributeData[1])
+                    if (rawLine.Contains(NODE_IDENTIFIER) || rawLine.Contains(MESSAGE_IDENTIFIER) || rawLine.Contains(SIGNAL_IDENTIFIER))
                     {
-                        case NODE_IDENTIFIER:
-                            tempAttribute.AttributeType = EAttributeType.Node;
-                            string[] attributeNameData = attributeData[3].Split('"');
+                        switch (attributeData[1])
+                        {
+                            case NODE_IDENTIFIER:
+                                tempAttribute.AttributeType = EAttributeType.Node;
+                                break;
 
-                            tempAttribute.AttributeName = attributeNameData[1];
-                            switch(attributeData[4])
-                            {
-                                case "HEX":
-                                    tempAttribute.AttributeValueType = EAttributeValueType.Hex;
-                                    break;
-                                case "ENUM":
-                                    tempAttribute.AttributeValueType = EAttributeValueType.Enumeration;
-                                    break;
-                                case "INT":
-                                    tempAttribute.AttributeValueType = EAttributeValueType.Integer;
-                                    break;
-                                case "STRING":
-                                    tempAttribute.AttributeValueType = EAttributeValueType.String;
-                                    break;
-                                case "FLOAT":
-                                    tempAttribute.AttributeValueType = EAttributeValueType.Float;
-                                    break;
+                            case MESSAGE_IDENTIFIER:
+                                tempAttribute.AttributeType = EAttributeType.Message;
+                                break;
 
+                            case SIGNAL_IDENTIFIER:
+                                tempAttribute.AttributeType = EAttributeType.Signal;
+                                break;
 
-                                default:
-                                    break;
-                            }
-                            break;
+                            default:
+                                Debug.Assert(false);
+                                break;
+                        }
 
-                        case MESSAGE_IDENTIFIER:
-                            tempAttribute.AttributeType = EAttributeType.Message;
-                            break;
+                        tempAttribute.AttributeName = attributeData[3].Split('"')[1];
 
-                        case SIGNAL_IDENTIFIER:
-                            tempAttribute.AttributeType = EAttributeType.Signal;
-                            break;
+                        switch (attributeData[4])
+                        {
+                            case "HEX":
+                                tempAttribute.AttributeValueType = EAttributeValueType.Hex;
+                                tempAttribute.Minimum = attributeData[5];
+                                tempAttribute.Maximum = attributeData[6];
+                                break;
+                            case "ENUM":
+                                tempAttribute.AttributeValueType = EAttributeValueType.Enumeration;
+                                string enumRawValue = rawLine.Split("ENUM", StringSplitOptions.None)[1];
+                                string[] enumValues = enumRawValue.Split(',');
 
-                        default:
-                            tempAttribute.AttributeType = EAttributeType.Network;
-                            break;
+                                for (int i = 0; i < enumValues.Length; i++)
+                                {
+                                    tempAttribute.EnumValueList.Add(enumValues[i].Split('"')[1]);
+                                }
+                                break;
+                            case "INT":
+                                tempAttribute.AttributeValueType = EAttributeValueType.Integer;
+                                tempAttribute.Minimum = attributeData[5];
+                                tempAttribute.Maximum = attributeData[6];
+                                break;
+                            case "STRING":
+                                tempAttribute.AttributeValueType = EAttributeValueType.String;
+                                break;
+                            case "FLOAT":
+                                tempAttribute.AttributeValueType = EAttributeValueType.Float;
+                                tempAttribute.Minimum = attributeData[5];
+                                tempAttribute.Maximum = attributeData[6];
+                                break;
+
+                            default:
+                                Debug.Assert(false);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        tempAttribute.AttributeType = EAttributeType.Network;
+                        tempAttribute.AttributeName = attributeData[2].Split('"')[1];
+
+                        switch (attributeData[3])
+                        {
+                            case "HEX":
+                                tempAttribute.AttributeValueType = EAttributeValueType.Hex;
+                                tempAttribute.Minimum = attributeData[4];
+                                tempAttribute.Maximum = attributeData[5];
+                                break;
+                            case "ENUM":
+                                tempAttribute.AttributeValueType = EAttributeValueType.Enumeration;
+                                string enumRawValue = rawLine.Split("ENUM", StringSplitOptions.None)[1];
+                                string[] enumValues = enumRawValue.Split(',');
+
+                                for (int i = 0; i < enumValues.Length; i++)
+                                {
+                                    tempAttribute.EnumValueList.Add(enumValues[i].Split('"')[1]);
+                                }
+                                break;
+                            case "INT":
+                                tempAttribute.AttributeValueType = EAttributeValueType.Integer;
+                                tempAttribute.Minimum = attributeData[4];
+                                tempAttribute.Maximum = attributeData[5];
+                                break;
+                            case "STRING":
+                                tempAttribute.AttributeValueType = EAttributeValueType.String;
+                                break;
+                            case "FLOAT":
+                                tempAttribute.AttributeValueType = EAttributeValueType.Float;
+                                tempAttribute.Minimum = attributeData[4];
+                                tempAttribute.Maximum = attributeData[5];
+                                break;
+
+                            default:
+                                Debug.Assert(false);
+                                break;
+                        }
                     }
 
+                    AttributeDictionary.Add(tempAttribute.AttributeName, tempAttribute);
+
+                    continue;
+                }
+
+                if (rawLine.StartsWith(ATTRIBUTE_DEF_DEFAULT_IDENTIFIER))
+                {
+                    string[] attributeDefaultData = rawLine.Split(' ');
+                    string attributeName = attributeDefaultData[2].Split('"')[1];
+
+                    if (AttributeDictionary.ContainsKey(attributeName))
+                    {
+                        string defaultValue = attributeDefaultData[3];
+
+                        if (defaultValue.Contains('"'))
+                        {
+                            defaultValue = defaultValue.Split('"')[1];
+                        }
+
+                        if(defaultValue.Contains(';'))
+                        {
+                           defaultValue = defaultValue.Remove(defaultValue.Length - 1);
+                        }
+
+                        AttributeDictionary[attributeName].Default = defaultValue;
+                    }
+
+                    continue;
+                }
+
+                if (rawLine.StartsWith(ATTRIBUTE_VALUE_IDENTIFIER))
+                {
+                    string[] attributeValueData = rawLine.Split(' ');
+                    string attributeName = attributeValueData[1].Split('"')[1];
+
+                    if (AttributeDictionary.ContainsKey(attributeName))
+                    {
+                        AttributeDictionary[attributeName].Data = attributeValueData[2];
+                    }
                 }
             }
 

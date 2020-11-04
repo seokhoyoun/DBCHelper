@@ -53,11 +53,24 @@ namespace DBCHelper
             set;
         }
 
-        public string Default
+        public string Data
         {
             get;
             set;
         }
+
+        public string Default
+        {
+            get;
+            set;
+        } = string.Empty;
+
+        public List<string> EnumValueList
+        {
+            get;
+            set;
+        } = new List<string>();
+
 
         public CANAttribute()
         {
