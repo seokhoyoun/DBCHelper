@@ -375,6 +375,17 @@ namespace DBCHelper
                     string[] attributeValueData = rawLine.Split(' ');
                     string attributeName = attributeValueData[1].Split('"')[1];
 
+                    string dataValue;
+
+                    if(attributeValueData.Length < 4)
+                    {
+                        dataValue = attributeValueData[2];
+                    }
+                    else
+                    {
+                        dataValue = attributeValueData[3];
+                    }
+
                     if (AttributeDictionary.ContainsKey(attributeName))
                     {
                         AttributeDictionary[attributeName].Data = attributeValueData[2];
