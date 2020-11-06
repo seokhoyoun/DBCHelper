@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DBCHelper.Extension;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -12,7 +13,7 @@ namespace DBCHelper
     {
         #region Public Properties
 
-        public Dictionary<string, List<CANSignal>> NetworkNodeDictionary
+        public Dictionary<string, CANNetworkNode> NetworkNodeDictionary
         {
             get;
             set;
@@ -32,6 +33,8 @@ namespace DBCHelper
 
 
 
+
+
         #endregion
 
         #region Private Field
@@ -40,6 +43,7 @@ namespace DBCHelper
         private const string MESSAGE_IDENTIFIER = "BO_";
         private const string COMMENT_IDENTIFIER = "CM_";
         private const string SIGNAL_IDENTIFIER = "SG_";
+        private const string VALUE_TABLE_IDENTIFIER = "VAL_";
 
         private const string ATTRIBUTE_VALUE_IDENTIFIER = "BA_";
         private const string ATTRIBUTE_DEF_IDENTIFIER = "BA_DEF_";
@@ -53,7 +57,7 @@ namespace DBCHelper
 
         public DBCParser()
         {
-            NetworkNodeDictionary = new Dictionary<string, List<CANSignal>>();
+            NetworkNodeDictionary = new Dictionary<string, CANNetworkNode>();
             MessageDictionary = new Dictionary<uint, CANMessage>();
             AttributeDictionary = new Dictionary<string, CANAttribute>();
 
@@ -75,7 +79,7 @@ namespace DBCHelper
                     string[] receivedNetworkNodes = rawLine.Split(' ');
                     for (int i = 1; i < receivedNetworkNodes.Length; i++)
                     {
-                        NetworkNodeDictionary.Add(receivedNetworkNodes[i], new List<CANSignal>());
+                        NetworkNodeDictionary.Add(receivedNetworkNodes[i], new CANNetworkNode());
                     }
 
                     continue;
@@ -159,12 +163,12 @@ namespace DBCHelper
 
                         if (NetworkNodeDictionary.ContainsKey(signal.Transmitter))
                         {
-                            NetworkNodeDictionary[signal.Transmitter].Add(signal);
+                            NetworkNodeDictionary[signal.Transmitter].SignalList.Add(signal);
                         }
 
                         if (NetworkNodeDictionary.ContainsKey(signal.ReceiverName))
                         {
-                            NetworkNodeDictionary[signal.ReceiverName].Add(signal);
+                            NetworkNodeDictionary[signal.ReceiverName].SignalList.Add(signal);
                         }
 
                         if (signal.ReceiverName.Contains(','))
@@ -175,7 +179,7 @@ namespace DBCHelper
                             {
                                 if (NetworkNodeDictionary.ContainsKey(receiverName))
                                 {
-                                    NetworkNodeDictionary[receiverName].Add(signal);
+                                    NetworkNodeDictionary[receiverName].SignalList.Add(signal);
                                 }
                             }
                         }
@@ -359,9 +363,9 @@ namespace DBCHelper
                             defaultValue = defaultValue.Split('"')[1];
                         }
 
-                        if(defaultValue.Contains(';'))
+                        if (defaultValue.Contains(';'))
                         {
-                           defaultValue = defaultValue.Remove(defaultValue.Length - 1);
+                            defaultValue = defaultValue.Remove(defaultValue.Length - 1);
                         }
 
                         AttributeDictionary[attributeName].Default = defaultValue;
@@ -373,30 +377,172 @@ namespace DBCHelper
                 if (rawLine.StartsWith(ATTRIBUTE_VALUE_IDENTIFIER))
                 {
                     string[] attributeValueData = rawLine.Split(' ');
+
                     string attributeName = attributeValueData[1].Split('"')[1];
 
                     string dataValue;
 
-                    if(attributeValueData.Length < 4)
+                    uint messageID;
+
+                    // Network
+                    if (attributeValueData.Length < 4)
                     {
                         dataValue = attributeValueData[2];
+
+                        if (dataValue.Contains(';'))
+                        {
+                            dataValue = dataValue.Remove(dataValue.Length - 1);
+                        }
+
+                        if (AttributeDictionary.ContainsKey(attributeName))
+                        {
+                            AttributeDictionary[attributeName].Data = dataValue;
+                        }
                     }
                     else
                     {
-                        dataValue = attributeValueData[3];
+                        string typeName = attributeValueData[3];
+
+                        CANAttribute tempAttribute = new CANAttribute();
+
+                        if (AttributeDictionary.ContainsKey(attributeName))
+                        {
+                            tempAttribute.CopyAttribute(AttributeDictionary[attributeName]);
+                        }
+
+                        switch (attributeValueData[2])
+                        {
+                            case NODE_IDENTIFIER:
+
+                                dataValue = attributeValueData[4];
+
+                                if (dataValue.Contains('"'))
+                                {
+                                    dataValue = dataValue.Split('"')[1];
+                                }
+
+                                if (dataValue.Contains(';'))
+                                {
+                                    dataValue = dataValue.Remove(dataValue.Length - 1);
+                                }
+
+                                tempAttribute.Data = dataValue;
+
+                                if (NetworkNodeDictionary.ContainsKey(typeName))
+                                {
+                                    NetworkNodeDictionary[typeName].AttributeList.Add(tempAttribute);
+                                }
+
+                                break;
+
+                            case MESSAGE_IDENTIFIER:
+
+                                dataValue = attributeValueData[4];
+
+                                if (dataValue.Contains('"'))
+                                {
+                                    dataValue = dataValue.Split('"')[1];
+                                }
+
+                                if (dataValue.Contains(';'))
+                                {
+                                    dataValue = dataValue.Remove(dataValue.Length - 1);
+                                }
+
+                                tempAttribute.Data = dataValue;
+
+                                messageID = uint.Parse(typeName);
+
+                                if(MessageDictionary.ContainsKey(messageID))
+                                {
+                                    MessageDictionary[messageID].AttributeList.Add(tempAttribute);
+                                }
+
+                                break;
+
+
+                            case SIGNAL_IDENTIFIER:
+
+                                dataValue = attributeValueData[5];
+
+                                if (dataValue.Contains('"'))
+                                {
+                                    dataValue = dataValue.Split('"')[1];
+                                }
+
+                                if (dataValue.Contains(';'))
+                                {
+                                    dataValue = dataValue.Remove(dataValue.Length - 1);
+                                }
+
+                                tempAttribute.Data = dataValue;
+
+                                messageID = uint.Parse(typeName);
+
+                                if (MessageDictionary.ContainsKey(messageID))
+                                {
+                                    string tempSignalName = attributeValueData[4];
+
+                                    foreach (var signal in MessageDictionary[messageID].SignalLIst)
+                                    {
+                                        if(signal.SignalName == tempSignalName)
+                                        {
+                                            signal.AttributeList.Add(tempAttribute);
+
+                                            break;
+                                        }
+                                    } 
+                                }
+
+                                break;
+                        }
+
                     }
 
-                    if (AttributeDictionary.ContainsKey(attributeName))
+                    continue;
+                }
+
+                if(rawLine.StartsWith(VALUE_TABLE_IDENTIFIER))
+                {
+                    string[] valueTableData = rawLine.Split(' ');
+
+                    uint messageID = uint.Parse(valueTableData[1]);
+                    string tempSignalName = valueTableData[2];
+
+                    if(MessageDictionary.ContainsKey(messageID))
                     {
-                        AttributeDictionary[attributeName].Data = attributeValueData[2];
+                        foreach (var signal in MessageDictionary[messageID].SignalLIst)
+                        {
+                            if(signal.SignalName == tempSignalName)
+                            {
+                                string physicAndDescPart = rawLine.Split(valueTableData[2], StringSplitOptions.RemoveEmptyEntries)[1];
+                                string[] tempPhysicAndDescArr = physicAndDescPart.Split(new char[] { '"',';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                                int physicalDecimal;
+                                string description;
+
+                                for (int i = 0; i < tempPhysicAndDescArr.Length -1; i += 2)
+                                {
+                                    physicalDecimal = int.Parse(tempPhysicAndDescArr[i]);
+                                    description = tempPhysicAndDescArr[i + 1];
+
+                                    signal.ValueTableList.Add(new Tuple<int, string>(physicalDecimal, description));
+                                }
+
+                                break;
+                            }
+                        }  
                     }
+
                 }
             }
-
-
-
         }
 
 
+
     }
+
+
 }
+
+

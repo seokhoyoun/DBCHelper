@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DBCHelper
 {
@@ -29,6 +27,12 @@ namespace DBCHelper
             get;
             set;
         }
+
+        public List<CANAttribute> AttributeList 
+        { 
+            get;
+            set;
+        } = new List<CANAttribute>();
 
         public List<CANSignal> SignalLIst
         {

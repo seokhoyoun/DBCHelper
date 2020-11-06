@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DBCHelper
 {
@@ -57,6 +58,8 @@ namespace DBCHelper
 
         public string Comment { get; set; }
 
-        public List<CANAttribute> SignalAttributeList {get; set;}
+        public List<CANAttribute> AttributeList { get; set; } = new List<CANAttribute>();
+
+        public List<Tuple<int, string>> ValueTableList { get; set; } = new List<Tuple<int, string>>();
     }
 }
