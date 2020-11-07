@@ -58,8 +58,8 @@ namespace DBCHelper
 
         public string Comment { get; set; }
 
-        public List<CANAttribute> AttributeList { get; set; } = new List<CANAttribute>();
+        public List<CANAttribute> AttributeList { get; private set; } = new List<CANAttribute>();
 
-        public List<Tuple<int, string>> ValueTableList { get; set; } = new List<Tuple<int, string>>();
+        public Dictionary<int, string> ValueTableList { get; private set; } = new Dictionary<int, string>();
     }
 }

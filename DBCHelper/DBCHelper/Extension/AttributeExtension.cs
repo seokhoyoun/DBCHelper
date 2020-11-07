@@ -1,5 +1,7 @@
 ﻿
 
+using System;
+
 namespace DBCHelper.Extension
 {
     public static class AttributeExtension
@@ -11,6 +13,11 @@ namespace DBCHelper.Extension
         /// <param name="copyData">복사에 사용할 Attribute</param>
         public static void CopyAttribute(this CANAttribute attribute, CANAttribute copyData)
         {
+            if(attribute == null)
+            {
+                throw new NullReferenceException();
+            }
+
             attribute.AttributeName = copyData.AttributeName;
             attribute.AttributeType = copyData.AttributeType;
             attribute.AttributeValueType = copyData.AttributeValueType;

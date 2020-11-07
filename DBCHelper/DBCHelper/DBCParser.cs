@@ -16,19 +16,19 @@ namespace DBCHelper
         public Dictionary<string, CANNetworkNode> NetworkNodeDictionary
         {
             get;
-            set;
+            private set;
         }
 
         public Dictionary<uint, CANMessage> MessageDictionary
         {
             get;
-            set;
+            private set;
         }
 
         public Dictionary<string, CANAttribute> AttributeDictionary
         {
             get;
-            set;
+            private set;
         }
 
 
@@ -526,7 +526,7 @@ namespace DBCHelper
                                     physicalDecimal = int.Parse(tempPhysicAndDescArr[i]);
                                     description = tempPhysicAndDescArr[i + 1];
 
-                                    signal.ValueTableList.Add(new Tuple<int, string>(physicalDecimal, description));
+                                    //signal.ValueTableList.Add(new Tuple<int, string>(physicalDecimal, description));
                                 }
 
                                 break;
