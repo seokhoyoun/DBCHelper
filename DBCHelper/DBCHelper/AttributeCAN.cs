@@ -14,14 +14,14 @@ namespace DBCHelper
 
     public enum EAttributeValueType
     {
-        Enumeration,
-        String,
-        Integer,
-        Hex,
-        Float
+        EnumType,
+        StringType,
+        IntegerType,
+        HexType,
+        FloatType
     }
 
-    public class CANAttribute
+    public class AttributeCAN
     {
         public string AttributeName
         {
@@ -65,16 +65,11 @@ namespace DBCHelper
             set;
         } = string.Empty;
 
-        public List<string> EnumValueList
+        public IList<string> EnumValueList
         {
             get;
-            set;
+            private set;
         } = new List<string>();
 
-
-        public CANAttribute()
-        {
-           
-        }
     }
 }

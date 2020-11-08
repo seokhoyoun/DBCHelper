@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,19 +14,19 @@ namespace DBCHelper
     {
         #region Public Properties
 
-        public Dictionary<string, CANNetworkNode> NetworkNodeDictionary
+        public Dictionary<string, NetworkNodeCAN> NetworkNodeDictionary
         {
             get;
             private set;
         }
 
-        public Dictionary<uint, CANMessage> MessageDictionary
+        public Dictionary<uint, MessageCAN> MessageDictionary
         {
             get;
             private set;
         }
 
-        public Dictionary<string, CANAttribute> AttributeDictionary
+        public Dictionary<string, AttributeCAN> AttributeDictionary
         {
             get;
             private set;
@@ -51,15 +52,18 @@ namespace DBCHelper
 
         private const string NONE = "NONE";
 
+        private const StringComparison COMPARISON = StringComparison.OrdinalIgnoreCase;
+        private readonly IFormatProvider NUMBER_FORMAT = CultureInfo.GetCultureInfo("en-US");
+
         private string mPath;
 
         #endregion
 
         public DBCParser()
         {
-            NetworkNodeDictionary = new Dictionary<string, CANNetworkNode>();
-            MessageDictionary = new Dictionary<uint, CANMessage>();
-            AttributeDictionary = new Dictionary<string, CANAttribute>();
+            NetworkNodeDictionary = new Dictionary<string, NetworkNodeCAN>();
+            MessageDictionary = new Dictionary<uint, MessageCAN>();
+            AttributeDictionary = new Dictionary<string, AttributeCAN>();
 
             mPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\\dbcsamp.dbc";
         }
@@ -74,34 +78,34 @@ namespace DBCHelper
             {
                 rawLine = streamReader.ReadLine();
 
-                if (rawLine.StartsWith(NODE_IDENTIFIER))
+                if (rawLine.StartsWith(NODE_IDENTIFIER, COMPARISON))
                 {
                     string[] receivedNetworkNodes = rawLine.Split(' ');
                     for (int i = 1; i < receivedNetworkNodes.Length; i++)
                     {
-                        NetworkNodeDictionary.Add(receivedNetworkNodes[i], new CANNetworkNode());
+                        NetworkNodeDictionary.Add(receivedNetworkNodes[i], new NetworkNodeCAN());
                     }
 
                     continue;
                 }
 
-                if (rawLine.StartsWith(MESSAGE_IDENTIFIER))
+                if (rawLine.StartsWith(MESSAGE_IDENTIFIER, COMPARISON))
                 {
                     string[] receivedMessageData = rawLine.Split(' ');
 
-                    CANMessage message = new CANMessage();
-                    message.ID = uint.Parse(receivedMessageData[1]);
+                    MessageCAN message = new MessageCAN();
+                    message.ID = uint.Parse(receivedMessageData[1],NUMBER_FORMAT);
                     message.MessageName = receivedMessageData[2];
-                    message.DLC = byte.Parse(receivedMessageData[3]);
+                    message.DLC = byte.Parse(receivedMessageData[3], NUMBER_FORMAT);
                     message.Transmitter = receivedMessageData[4];
 
                     rawLine = streamReader.ReadLine();
 
-                    while (rawLine.Contains(SIGNAL_IDENTIFIER))
+                    while (rawLine.Contains(SIGNAL_IDENTIFIER, COMPARISON))
                     {
                         string[] receivedSignalData = rawLine.Split(' ');
 
-                        CANSignal signal = new CANSignal();
+                        SignalCAN signal = new SignalCAN();
                         signal.ID = message.ID;
                         signal.MessageName = message.MessageName;
                         signal.Transmitter = message.Transmitter;
@@ -109,8 +113,8 @@ namespace DBCHelper
 
                         string[] bitInfoData = receivedSignalData[4].Split(new char[] { '|', '@' });
 
-                        signal.StartBit = uint.Parse(bitInfoData[0]);
-                        signal.Length = uint.Parse(bitInfoData[1]);
+                        signal.StartBit = uint.Parse(bitInfoData[0], NUMBER_FORMAT);
+                        signal.Length = uint.Parse(bitInfoData[1], NUMBER_FORMAT);
 
                         switch (bitInfoData[2])
                         {
@@ -140,12 +144,12 @@ namespace DBCHelper
                         }
 
                         string[] offsetAndFactorData = receivedSignalData[5].Split(new char[] { '(', ',', ')' });
-                        signal.Factor = double.Parse(offsetAndFactorData[1]);
-                        signal.Offset = double.Parse(offsetAndFactorData[2]);
+                        signal.Factor = double.Parse(offsetAndFactorData[1], NUMBER_FORMAT);
+                        signal.Offset = double.Parse(offsetAndFactorData[2], NUMBER_FORMAT);
 
                         string[] minAndMaxData = receivedSignalData[6].Split(new char[] { '[', '|', ']' });
-                        signal.Minimum = double.Parse(minAndMaxData[1]);
-                        signal.Maximum = double.Parse(minAndMaxData[2]);
+                        signal.Minimum = double.Parse(minAndMaxData[1], NUMBER_FORMAT);
+                        signal.Maximum = double.Parse(minAndMaxData[2], NUMBER_FORMAT);
 
                         string[] unitData = receivedSignalData[7].Split(new char[] { '"' });
                         signal.Unit = unitData[1];
@@ -171,7 +175,7 @@ namespace DBCHelper
                             NetworkNodeDictionary[signal.ReceiverName].SignalList.Add(signal);
                         }
 
-                        if (signal.ReceiverName.Contains(','))
+                        if (signal.ReceiverName.Contains(',', COMPARISON))
                         {
                             string[] nodeData = signal.ReceiverName.Split(',');
 
@@ -193,7 +197,7 @@ namespace DBCHelper
                     continue;
                 }
 
-                if (rawLine.StartsWith(COMMENT_IDENTIFIER))
+                if (rawLine.StartsWith(COMMENT_IDENTIFIER, COMPARISON))
                 {
                     string[] commentData = rawLine.Split(' ');
                     uint tempMessageKey;
@@ -201,11 +205,11 @@ namespace DBCHelper
                     switch (commentData[1])
                     {
                         case "SG_":
-                            tempMessageKey = uint.Parse(commentData[2]);
+                            tempMessageKey = uint.Parse(commentData[2], NUMBER_FORMAT);
 
                             if (MessageDictionary.ContainsKey(tempMessageKey))
                             {
-                                List<CANSignal> tempSignalList = MessageDictionary[tempMessageKey].SignalLIst;
+                                List<SignalCAN> tempSignalList = (List<SignalCAN>)MessageDictionary[tempMessageKey].SignalLIst;
 
                                 foreach (var item in tempSignalList)
                                 {
@@ -214,7 +218,7 @@ namespace DBCHelper
                                         string[] signalCommentData = rawLine.Split('"');
                                         item.Comment = signalCommentData[1];
 
-                                        //CANMessage changedMessage = MessageDictionary[tempMessageKey];
+                                        //MessageCAN changedMessage = MessageDictionary[tempMessageKey];
                                         //changedMessage.SignalLIst = signalCommentData[1];
 
                                         //MessageDictionary[tempMessageKey].SignalLIst = tempSignalList;
@@ -224,7 +228,7 @@ namespace DBCHelper
                             break;
 
                         case "BO_":
-                            tempMessageKey = uint.Parse(commentData[2]);
+                            tempMessageKey = uint.Parse(commentData[2], NUMBER_FORMAT);
 
                             if (MessageDictionary.ContainsKey(tempMessageKey))
                             {
@@ -238,12 +242,12 @@ namespace DBCHelper
                     }
                 }
 
-                if (rawLine.StartsWith(ATTRIBUTE_DEF_IDENTIFIER) && !rawLine.StartsWith(ATTRIBUTE_DEF_DEFAULT_IDENTIFIER))
+                if (rawLine.StartsWith(ATTRIBUTE_DEF_IDENTIFIER, COMPARISON) && !rawLine.StartsWith(ATTRIBUTE_DEF_DEFAULT_IDENTIFIER, COMPARISON))
                 {
                     string[] attributeData = rawLine.Split(' ');
-                    CANAttribute tempAttribute = new CANAttribute();
+                    AttributeCAN tempAttribute = new AttributeCAN();
 
-                    if (rawLine.Contains(NODE_IDENTIFIER) || rawLine.Contains(MESSAGE_IDENTIFIER) || rawLine.Contains(SIGNAL_IDENTIFIER))
+                    if (rawLine.Contains(NODE_IDENTIFIER, COMPARISON) || rawLine.Contains(MESSAGE_IDENTIFIER, COMPARISON) || rawLine.Contains(SIGNAL_IDENTIFIER, COMPARISON))
                     {
                         switch (attributeData[1])
                         {
@@ -269,12 +273,12 @@ namespace DBCHelper
                         switch (attributeData[4])
                         {
                             case "HEX":
-                                tempAttribute.AttributeValueType = EAttributeValueType.Hex;
+                                tempAttribute.AttributeValueType = EAttributeValueType.HexType;
                                 tempAttribute.Minimum = attributeData[5];
                                 tempAttribute.Maximum = attributeData[6];
                                 break;
                             case "ENUM":
-                                tempAttribute.AttributeValueType = EAttributeValueType.Enumeration;
+                                tempAttribute.AttributeValueType = EAttributeValueType.EnumType;
                                 string enumRawValue = rawLine.Split("ENUM", StringSplitOptions.None)[1];
                                 string[] enumValues = enumRawValue.Split(',');
 
@@ -284,15 +288,15 @@ namespace DBCHelper
                                 }
                                 break;
                             case "INT":
-                                tempAttribute.AttributeValueType = EAttributeValueType.Integer;
+                                tempAttribute.AttributeValueType = EAttributeValueType.IntegerType;
                                 tempAttribute.Minimum = attributeData[5];
                                 tempAttribute.Maximum = attributeData[6];
                                 break;
                             case "STRING":
-                                tempAttribute.AttributeValueType = EAttributeValueType.String;
+                                tempAttribute.AttributeValueType = EAttributeValueType.StringType;
                                 break;
                             case "FLOAT":
-                                tempAttribute.AttributeValueType = EAttributeValueType.Float;
+                                tempAttribute.AttributeValueType = EAttributeValueType.FloatType;
                                 tempAttribute.Minimum = attributeData[5];
                                 tempAttribute.Maximum = attributeData[6];
                                 break;
@@ -310,12 +314,12 @@ namespace DBCHelper
                         switch (attributeData[3])
                         {
                             case "HEX":
-                                tempAttribute.AttributeValueType = EAttributeValueType.Hex;
+                                tempAttribute.AttributeValueType = EAttributeValueType.HexType;
                                 tempAttribute.Minimum = attributeData[4];
                                 tempAttribute.Maximum = attributeData[5];
                                 break;
                             case "ENUM":
-                                tempAttribute.AttributeValueType = EAttributeValueType.Enumeration;
+                                tempAttribute.AttributeValueType = EAttributeValueType.EnumType;
                                 string enumRawValue = rawLine.Split("ENUM", StringSplitOptions.None)[1];
                                 string[] enumValues = enumRawValue.Split(',');
 
@@ -325,15 +329,15 @@ namespace DBCHelper
                                 }
                                 break;
                             case "INT":
-                                tempAttribute.AttributeValueType = EAttributeValueType.Integer;
+                                tempAttribute.AttributeValueType = EAttributeValueType.IntegerType;
                                 tempAttribute.Minimum = attributeData[4];
                                 tempAttribute.Maximum = attributeData[5];
                                 break;
                             case "STRING":
-                                tempAttribute.AttributeValueType = EAttributeValueType.String;
+                                tempAttribute.AttributeValueType = EAttributeValueType.StringType;
                                 break;
                             case "FLOAT":
-                                tempAttribute.AttributeValueType = EAttributeValueType.Float;
+                                tempAttribute.AttributeValueType = EAttributeValueType.FloatType;
                                 tempAttribute.Minimum = attributeData[4];
                                 tempAttribute.Maximum = attributeData[5];
                                 break;
@@ -349,7 +353,7 @@ namespace DBCHelper
                     continue;
                 }
 
-                if (rawLine.StartsWith(ATTRIBUTE_DEF_DEFAULT_IDENTIFIER))
+                if (rawLine.StartsWith(ATTRIBUTE_DEF_DEFAULT_IDENTIFIER, COMPARISON))
                 {
                     string[] attributeDefaultData = rawLine.Split(' ');
                     string attributeName = attributeDefaultData[2].Split('"')[1];
@@ -358,12 +362,12 @@ namespace DBCHelper
                     {
                         string defaultValue = attributeDefaultData[3];
 
-                        if (defaultValue.Contains('"'))
+                        if (defaultValue.Contains('"', COMPARISON))
                         {
                             defaultValue = defaultValue.Split('"')[1];
                         }
 
-                        if (defaultValue.Contains(';'))
+                        if (defaultValue.Contains(';', COMPARISON))
                         {
                             defaultValue = defaultValue.Remove(defaultValue.Length - 1);
                         }
@@ -374,7 +378,7 @@ namespace DBCHelper
                     continue;
                 }
 
-                if (rawLine.StartsWith(ATTRIBUTE_VALUE_IDENTIFIER))
+                if (rawLine.StartsWith(ATTRIBUTE_VALUE_IDENTIFIER, COMPARISON))
                 {
                     string[] attributeValueData = rawLine.Split(' ');
 
@@ -389,7 +393,7 @@ namespace DBCHelper
                     {
                         dataValue = attributeValueData[2];
 
-                        if (dataValue.Contains(';'))
+                        if (dataValue.Contains(';', COMPARISON))
                         {
                             dataValue = dataValue.Remove(dataValue.Length - 1);
                         }
@@ -403,7 +407,7 @@ namespace DBCHelper
                     {
                         string typeName = attributeValueData[3];
 
-                        CANAttribute tempAttribute = new CANAttribute();
+                        AttributeCAN tempAttribute = new AttributeCAN();
 
                         if (AttributeDictionary.ContainsKey(attributeName))
                         {
@@ -416,12 +420,12 @@ namespace DBCHelper
 
                                 dataValue = attributeValueData[4];
 
-                                if (dataValue.Contains('"'))
+                                if (dataValue.Contains('"', COMPARISON))
                                 {
                                     dataValue = dataValue.Split('"')[1];
                                 }
 
-                                if (dataValue.Contains(';'))
+                                if (dataValue.Contains(';', COMPARISON))
                                 {
                                     dataValue = dataValue.Remove(dataValue.Length - 1);
                                 }
@@ -439,19 +443,19 @@ namespace DBCHelper
 
                                 dataValue = attributeValueData[4];
 
-                                if (dataValue.Contains('"'))
+                                if (dataValue.Contains('"', COMPARISON))
                                 {
                                     dataValue = dataValue.Split('"')[1];
                                 }
 
-                                if (dataValue.Contains(';'))
+                                if (dataValue.Contains(';', COMPARISON))
                                 {
                                     dataValue = dataValue.Remove(dataValue.Length - 1);
                                 }
 
                                 tempAttribute.Data = dataValue;
 
-                                messageID = uint.Parse(typeName);
+                                messageID = uint.Parse(typeName, NUMBER_FORMAT);
 
                                 if(MessageDictionary.ContainsKey(messageID))
                                 {
@@ -465,19 +469,19 @@ namespace DBCHelper
 
                                 dataValue = attributeValueData[5];
 
-                                if (dataValue.Contains('"'))
+                                if (dataValue.Contains('"', COMPARISON))
                                 {
                                     dataValue = dataValue.Split('"')[1];
                                 }
 
-                                if (dataValue.Contains(';'))
+                                if (dataValue.Contains(';', COMPARISON))
                                 {
                                     dataValue = dataValue.Remove(dataValue.Length - 1);
                                 }
 
                                 tempAttribute.Data = dataValue;
 
-                                messageID = uint.Parse(typeName);
+                                messageID = uint.Parse(typeName, NUMBER_FORMAT);
 
                                 if (MessageDictionary.ContainsKey(messageID))
                                 {
@@ -502,11 +506,11 @@ namespace DBCHelper
                     continue;
                 }
 
-                if(rawLine.StartsWith(VALUE_TABLE_IDENTIFIER))
+                if(rawLine.StartsWith(VALUE_TABLE_IDENTIFIER, COMPARISON))
                 {
                     string[] valueTableData = rawLine.Split(' ');
 
-                    uint messageID = uint.Parse(valueTableData[1]);
+                    uint messageID = uint.Parse(valueTableData[1], NUMBER_FORMAT);
                     string tempSignalName = valueTableData[2];
 
                     if(MessageDictionary.ContainsKey(messageID))
@@ -523,7 +527,7 @@ namespace DBCHelper
 
                                 for (int i = 0; i < tempPhysicAndDescArr.Length -1; i += 2)
                                 {
-                                    physicalDecimal = int.Parse(tempPhysicAndDescArr[i]);
+                                    physicalDecimal = int.Parse(tempPhysicAndDescArr[i], NUMBER_FORMAT);
                                     description = tempPhysicAndDescArr[i + 1];
 
                                     //signal.ValueTableList.Add(new Tuple<int, string>(physicalDecimal, description));

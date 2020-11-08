@@ -4,9 +4,8 @@ namespace DBCHelper
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            Console.WriteLine("Hello World!");
 
             DBCParser parser = new DBCParser();
 
@@ -16,7 +15,7 @@ namespace DBCHelper
 
             var nodes = parser.NetworkNodeDictionary;
 
-            var attribute = new CANAttribute();
+            var attribute = new AttributeCAN();
 
             
         }

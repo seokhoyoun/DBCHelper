@@ -11,18 +11,29 @@ namespace DBCHelper.Extension
         /// </summary>
         /// <param name="attribute">복사 되는 Attribute</param>
         /// <param name="copyData">복사에 사용할 Attribute</param>
-        public static void CopyAttribute(this CANAttribute attribute, CANAttribute copyData)
+        public static void CopyAttribute(this AttributeCAN attribute, AttributeCAN copyData)
         {
-            if(attribute == null)
+            if (attribute is null)
             {
-                throw new NullReferenceException();
+                throw new ArgumentNullException(nameof(attribute));
             }
 
+            if(copyData is null)
+            {
+                throw new ArgumentNullException(nameof(copyData));
+            }
+            
             attribute.AttributeName = copyData.AttributeName;
             attribute.AttributeType = copyData.AttributeType;
             attribute.AttributeValueType = copyData.AttributeValueType;
             attribute.Default = copyData.Default;
-            attribute.EnumValueList = copyData.EnumValueList;
+            attribute.EnumValueList.Clear();
+
+            foreach (var enumValue in copyData.EnumValueList)
+            {
+                attribute.EnumValueList.Add(enumValue);
+            }
+
             attribute.Maximum = copyData.Maximum;
             attribute.Minimum = copyData.Minimum;
         }

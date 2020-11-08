@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 
 namespace DBCHelper
@@ -23,7 +24,7 @@ namespace DBCHelper
         StringType
     }
 
-    public class CANSignal
+    public class SignalCAN
     {
         public string NetworkNode { get; set; }
 
@@ -58,8 +59,8 @@ namespace DBCHelper
 
         public string Comment { get; set; }
 
-        public List<CANAttribute> AttributeList { get; private set; } = new List<CANAttribute>();
+        public IList<AttributeCAN> AttributeList { get; private set; } = new List<AttributeCAN>();
 
-        public Dictionary<int, string> ValueTableList { get; private set; } = new Dictionary<int, string>();
+        public Dictionary<int, string> ValueTableDictionary { get; private set; } = new Dictionary<int, string>();
     }
 }
