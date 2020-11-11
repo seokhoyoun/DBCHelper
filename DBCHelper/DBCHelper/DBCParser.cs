@@ -32,9 +32,11 @@ namespace DBCHelper
             private set;
         }
 
-
-
-
+        //public Dictionary<string, ValueTableCAN> ValueTableDictionary 
+        //{ 
+        //    get; 
+        //    private set; 
+        //}
 
         #endregion
 
@@ -44,7 +46,8 @@ namespace DBCHelper
         private const string MESSAGE_IDENTIFIER = "BO_";
         private const string COMMENT_IDENTIFIER = "CM_";
         private const string SIGNAL_IDENTIFIER = "SG_";
-        private const string VALUE_TABLE_IDENTIFIER = "VAL_";
+        private const string SIGNAL_VALUE_TABLE_IDENTIFIER = "VAL_";
+        private const string VALUE_TABLE_IDENTIFIER = "VAL_TABLE_";
 
         private const string ATTRIBUTE_VALUE_IDENTIFIER = "BA_";
         private const string ATTRIBUTE_DEF_IDENTIFIER = "BA_DEF_";
@@ -163,7 +166,7 @@ namespace DBCHelper
                             signal.ReceiverName = NONE;
                         }
 
-                        message.SignalLIst.Add(signal);
+                        message.SignalList.Add(signal);
 
                         if (NetworkNodeDictionary.ContainsKey(signal.Transmitter))
                         {
@@ -209,7 +212,7 @@ namespace DBCHelper
 
                             if (MessageDictionary.ContainsKey(tempMessageKey))
                             {
-                                List<SignalCAN> tempSignalList = (List<SignalCAN>)MessageDictionary[tempMessageKey].SignalLIst;
+                                List<SignalCAN> tempSignalList = (List<SignalCAN>)MessageDictionary[tempMessageKey].SignalList;
 
                                 foreach (var item in tempSignalList)
                                 {
@@ -487,7 +490,7 @@ namespace DBCHelper
                                 {
                                     string tempSignalName = attributeValueData[4];
 
-                                    foreach (var signal in MessageDictionary[messageID].SignalLIst)
+                                    foreach (var signal in MessageDictionary[messageID].SignalList)
                                     {
                                         if(signal.SignalName == tempSignalName)
                                         {
@@ -508,6 +511,11 @@ namespace DBCHelper
 
                 if(rawLine.StartsWith(VALUE_TABLE_IDENTIFIER, COMPARISON))
                 {
+                    
+                }
+
+                if(rawLine.StartsWith(SIGNAL_VALUE_TABLE_IDENTIFIER, COMPARISON) && !rawLine.StartsWith(VALUE_TABLE_IDENTIFIER, COMPARISON))
+                {
                     string[] valueTableData = rawLine.Split(' ');
 
                     uint messageID = uint.Parse(valueTableData[1], NUMBER_FORMAT);
@@ -515,22 +523,22 @@ namespace DBCHelper
 
                     if(MessageDictionary.ContainsKey(messageID))
                     {
-                        foreach (var signal in MessageDictionary[messageID].SignalLIst)
+                        foreach (var signal in MessageDictionary[messageID].SignalList)
                         {
                             if(signal.SignalName == tempSignalName)
                             {
-                                string physicAndDescPart = rawLine.Split(valueTableData[2], StringSplitOptions.RemoveEmptyEntries)[1];
-                                string[] tempPhysicAndDescArr = physicAndDescPart.Split(new char[] { '"',';' }, StringSplitOptions.RemoveEmptyEntries);
+                                string valueTableStr = rawLine.Split(valueTableData[2], StringSplitOptions.RemoveEmptyEntries)[1];
+                                string[] decimalAndDescriptionArr = valueTableStr.Split(new char[] { '"',';' }, StringSplitOptions.RemoveEmptyEntries);
 
-                                int physicalDecimal;
+                                int rawDecimal;
                                 string description;
 
-                                for (int i = 0; i < tempPhysicAndDescArr.Length -1; i += 2)
+                                for (int i = 0; i < decimalAndDescriptionArr.Length -1; i += 2)
                                 {
-                                    physicalDecimal = int.Parse(tempPhysicAndDescArr[i], NUMBER_FORMAT);
-                                    description = tempPhysicAndDescArr[i + 1];
+                                    rawDecimal = int.Parse(decimalAndDescriptionArr[i], NUMBER_FORMAT);
+                                    description = decimalAndDescriptionArr[i + 1];
 
-                                    //signal.ValueTableList.Add(new Tuple<int, string>(physicalDecimal, description));
+                                    //signal.ValueTableDictionary.Add(rawDecimal, description);
                                 }
 
                                 break;

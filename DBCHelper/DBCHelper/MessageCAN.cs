@@ -38,7 +38,7 @@ namespace DBCHelper
             private set;
         } = new List<AttributeCAN>();
 
-        public IList<SignalCAN> SignalLIst
+        public IList<SignalCAN> SignalList
         {
             get;
             private set;

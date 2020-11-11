@@ -31,6 +31,7 @@ namespace DBCHelper
         public string SignalName { get; set; }
 
         public string MessageName { get; set; }
+
         public uint ID { get; set; }
 
         public uint StartBit { get; set; }
@@ -59,8 +60,9 @@ namespace DBCHelper
 
         public string Comment { get; set; }
 
+        public ValueTableCAN ValueTable { get; set; }  
+
         public IList<AttributeCAN> AttributeList { get; private set; } = new List<AttributeCAN>();
 
-        public Dictionary<int, string> ValueTableDictionary { get; private set; } = new Dictionary<int, string>();
     }
 }
