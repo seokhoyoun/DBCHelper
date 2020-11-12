@@ -32,11 +32,11 @@ namespace DBCHelper
             private set;
         }
 
-        //public Dictionary<string, ValueTableCAN> ValueTableDictionary 
-        //{ 
-        //    get; 
-        //    private set; 
-        //}
+        public Dictionary<string, ValueTableCAN> ValueTableDictionary
+        {
+            get;
+            private set;
+        }
 
         #endregion
 
@@ -67,6 +67,7 @@ namespace DBCHelper
             NetworkNodeDictionary = new Dictionary<string, NetworkNodeCAN>();
             MessageDictionary = new Dictionary<uint, MessageCAN>();
             AttributeDictionary = new Dictionary<string, AttributeCAN>();
+            ValueTableDictionary = new Dictionary<string, ValueTableCAN>();
 
             mPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\\dbcsamp.dbc";
         }
@@ -97,7 +98,7 @@ namespace DBCHelper
                     string[] receivedMessageData = rawLine.Split(' ');
 
                     MessageCAN message = new MessageCAN();
-                    message.ID = uint.Parse(receivedMessageData[1],NUMBER_FORMAT);
+                    message.ID = uint.Parse(receivedMessageData[1], NUMBER_FORMAT);
                     message.MessageName = receivedMessageData[2];
                     message.DLC = byte.Parse(receivedMessageData[3], NUMBER_FORMAT);
                     message.Transmitter = receivedMessageData[4];
@@ -460,7 +461,7 @@ namespace DBCHelper
 
                                 messageID = uint.Parse(typeName, NUMBER_FORMAT);
 
-                                if(MessageDictionary.ContainsKey(messageID))
+                                if (MessageDictionary.ContainsKey(messageID))
                                 {
                                     MessageDictionary[messageID].AttributeList.Add(tempAttribute);
                                 }
@@ -492,13 +493,13 @@ namespace DBCHelper
 
                                     foreach (var signal in MessageDictionary[messageID].SignalList)
                                     {
-                                        if(signal.SignalName == tempSignalName)
+                                        if (signal.SignalName == tempSignalName)
                                         {
                                             signal.AttributeList.Add(tempAttribute);
 
                                             break;
                                         }
-                                    } 
+                                    }
                                 }
 
                                 break;
@@ -509,41 +510,47 @@ namespace DBCHelper
                     continue;
                 }
 
-                if(rawLine.StartsWith(VALUE_TABLE_IDENTIFIER, COMPARISON))
+                if (rawLine.StartsWith(VALUE_TABLE_IDENTIFIER, COMPARISON))
                 {
-                    
+
                 }
 
-                if(rawLine.StartsWith(SIGNAL_VALUE_TABLE_IDENTIFIER, COMPARISON) && !rawLine.StartsWith(VALUE_TABLE_IDENTIFIER, COMPARISON))
+                if (rawLine.StartsWith(SIGNAL_VALUE_TABLE_IDENTIFIER, COMPARISON) && !rawLine.StartsWith(VALUE_TABLE_IDENTIFIER, COMPARISON))
                 {
                     string[] valueTableData = rawLine.Split(' ');
 
                     uint messageID = uint.Parse(valueTableData[1], NUMBER_FORMAT);
                     string tempSignalName = valueTableData[2];
 
-                    if(MessageDictionary.ContainsKey(messageID))
+                    if (MessageDictionary.ContainsKey(messageID))
                     {
                         foreach (var signal in MessageDictionary[messageID].SignalList)
                         {
-                            if(signal.SignalName == tempSignalName)
+                            if (signal.SignalName == tempSignalName)
                             {
+                                ValueTableCAN signalValueTable = new ValueTableCAN();
+                                signalValueTable.ValueTableName = $"VtSig_{tempSignalName}";
+
                                 string valueTableStr = rawLine.Split(valueTableData[2], StringSplitOptions.RemoveEmptyEntries)[1];
-                                string[] decimalAndDescriptionArr = valueTableStr.Split(new char[] { '"',';' }, StringSplitOptions.RemoveEmptyEntries);
+                                string[] decimalAndDescriptionArr = valueTableStr.Split(new char[] { '"', ';' }, StringSplitOptions.RemoveEmptyEntries);
 
                                 int rawDecimal;
                                 string description;
 
-                                for (int i = 0; i < decimalAndDescriptionArr.Length -1; i += 2)
+                                for (int i = 0; i < decimalAndDescriptionArr.Length - 1; i += 2)
                                 {
                                     rawDecimal = int.Parse(decimalAndDescriptionArr[i], NUMBER_FORMAT);
                                     description = decimalAndDescriptionArr[i + 1];
 
-                                    //signal.ValueTableDictionary.Add(rawDecimal, description);
+                                    signalValueTable.ValueMap.Add(rawDecimal, description);
                                 }
+
+                                signal.ValueTable = signalValueTable;
+                                ValueTableDictionary.Add(signalValueTable.ValueTableName, signalValueTable);
 
                                 break;
                             }
-                        }  
+                        }
                     }
 
                 }

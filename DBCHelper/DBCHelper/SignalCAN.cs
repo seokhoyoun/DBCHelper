@@ -26,8 +26,6 @@ namespace DBCHelper
 
     public class SignalCAN
     {
-        public string NetworkNode { get; set; }
-
         public string SignalName { get; set; }
 
         public string MessageName { get; set; }

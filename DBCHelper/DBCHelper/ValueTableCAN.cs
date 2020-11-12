@@ -11,7 +11,7 @@ namespace DBCHelper
             set;
         }
 
-        public Dictionary<int, string> ValueTableDictionary
+        public Dictionary<int, string> ValueMap
         {
             get;
             private set;

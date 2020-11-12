@@ -17,7 +17,7 @@ namespace DBCHelper
 
             var attribute = new AttributeCAN();
 
-            
+            var values = parser.ValueTableDictionary;
         }
     }
 }
