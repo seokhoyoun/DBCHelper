@@ -53,6 +53,12 @@ namespace DBCHelper
         private const string ATTRIBUTE_DEF_IDENTIFIER = "BA_DEF_";
         private const string ATTRIBUTE_DEF_DEFAULT_IDENTIFIER = "BA_DEF_DEF_";
 
+        private const string ENVIRONMENT_VARIABLE_IDENTIFIER = "EV_";
+
+        // TODO::
+        private const string ATTRIBUTE_RELATIVE_IDENTIFIER = "BA_DEF_REL_";
+        private const string ATTRIBUTE_DEF_REL_IDENTIFIER = "BA_DEF_DEF_REL_";
+
         private const string NONE = "NONE";
 
         private const StringComparison COMPARISON = StringComparison.OrdinalIgnoreCase;
@@ -69,7 +75,7 @@ namespace DBCHelper
             AttributeDictionary = new Dictionary<string, AttributeCAN>();
             ValueTableDictionary = new Dictionary<string, ValueTableCAN>();
 
-            mPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\\dbcsamp.dbc";
+            mPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\\sampmo.dbc";
         }
 
         public void LoadFile()
@@ -246,6 +252,31 @@ namespace DBCHelper
                     }
                 }
 
+                if (rawLine.StartsWith(ATTRIBUTE_DEF_DEFAULT_IDENTIFIER, COMPARISON))
+                {
+                    string[] attributeDefaultData = rawLine.Split(' ');
+                    string attributeName = attributeDefaultData[2].Split('"')[1];
+
+                    if (AttributeDictionary.ContainsKey(attributeName))
+                    {
+                        string defaultValue = attributeDefaultData[3];
+
+                        if (defaultValue.Contains('"', COMPARISON))
+                        {
+                            defaultValue = defaultValue.Split('"')[1];
+                        }
+
+                        if (defaultValue.Contains(';', COMPARISON))
+                        {
+                            defaultValue = defaultValue.Remove(defaultValue.Length - 1);
+                        }
+
+                        AttributeDictionary[attributeName].Default = defaultValue;
+                    }
+
+                    continue;
+                }
+
                 if (rawLine.StartsWith(ATTRIBUTE_DEF_IDENTIFIER, COMPARISON) && !rawLine.StartsWith(ATTRIBUTE_DEF_DEFAULT_IDENTIFIER, COMPARISON))
                 {
                     string[] attributeData = rawLine.Split(' ');
@@ -353,31 +384,6 @@ namespace DBCHelper
                     }
 
                     AttributeDictionary.Add(tempAttribute.AttributeName, tempAttribute);
-
-                    continue;
-                }
-
-                if (rawLine.StartsWith(ATTRIBUTE_DEF_DEFAULT_IDENTIFIER, COMPARISON))
-                {
-                    string[] attributeDefaultData = rawLine.Split(' ');
-                    string attributeName = attributeDefaultData[2].Split('"')[1];
-
-                    if (AttributeDictionary.ContainsKey(attributeName))
-                    {
-                        string defaultValue = attributeDefaultData[3];
-
-                        if (defaultValue.Contains('"', COMPARISON))
-                        {
-                            defaultValue = defaultValue.Split('"')[1];
-                        }
-
-                        if (defaultValue.Contains(';', COMPARISON))
-                        {
-                            defaultValue = defaultValue.Remove(defaultValue.Length - 1);
-                        }
-
-                        AttributeDictionary[attributeName].Default = defaultValue;
-                    }
 
                     continue;
                 }
@@ -512,7 +518,29 @@ namespace DBCHelper
 
                 if (rawLine.StartsWith(VALUE_TABLE_IDENTIFIER, COMPARISON))
                 {
+                    string[] valueTableData = rawLine.Split(' ');
+                    string valueTableName = valueTableData[1];
 
+                    ValueTableCAN tempValueTable = new ValueTableCAN();
+                    tempValueTable.ValueTableName = valueTableName;
+
+                    string valueTableStr = rawLine.Split(valueTableData[1], StringSplitOptions.RemoveEmptyEntries)[1];
+                    string[] decimalAndDescriptionArr = valueTableStr.Split(new char[] { '"', ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    int rawDecimal;
+                    string description;
+
+                    for (int i = 0; i < decimalAndDescriptionArr.Length - 1; i += 2)
+                    {
+                        rawDecimal = int.Parse(decimalAndDescriptionArr[i], NUMBER_FORMAT);
+                        description = decimalAndDescriptionArr[i + 1];
+
+                        tempValueTable.ValueMap.Add(rawDecimal, description);
+                    }
+
+                    ValueTableDictionary.Add(valueTableName, tempValueTable);
+
+                    continue;
                 }
 
                 if (rawLine.StartsWith(SIGNAL_VALUE_TABLE_IDENTIFIER, COMPARISON) && !rawLine.StartsWith(VALUE_TABLE_IDENTIFIER, COMPARISON))
@@ -553,6 +581,44 @@ namespace DBCHelper
                         }
                     }
 
+                    continue;
+                }
+
+                if (rawLine.StartsWith(ENVIRONMENT_VARIABLE_IDENTIFIER, COMPARISON))
+                {
+                    // EV_ (Env Variable Name) : (Env Variable Type) [ (Minimum) | (Maximum) ] (Unit) (initial Value) (Ev ID) (Access Type) (Access node)
+                    string[] splitData = new string[] { ":" };
+                    string[] values = rawLine.Split(splitData, StringSplitOptions.RemoveEmptyEntries);
+                    EnvironmentVariableCAN envInfo = new EnvironmentVariableCAN();
+                    envInfo.Name = values[0].Replace(ENVIRONMENT_VARIABLE_IDENTIFIER, "", COMPARISON).Trim();
+                    splitData = new string[] { "|", "@", "(", ",", ")", "[", "]", " " };
+                    string[] values2 = values[1].Split(splitData, StringSplitOptions.RemoveEmptyEntries);
+
+                    switch(values2[0])
+                    {
+                        case "0": envInfo.VariableType = EVariableType.IntegerType; break;
+                        case "1": envInfo.VariableType = EVariableType.FloatType; break;
+                        case "2": envInfo.VariableType = EVariableType.StringType; break;
+                        default: envInfo.VariableType = EVariableType.StringType; break;
+                    }
+                    // 0 [0|1] \"\" 0 1 DUMMY_NODE_VECTOR0 Vector__XXX;
+                    envInfo.Minimum = values2[1];
+                    envInfo.Maximum = values2[2];
+                    envInfo.Unit = values2[3].Replace("\"", "", COMPARISON);
+                    envInfo.InitialValue = values2[4];
+                    envInfo.ID = uint.Parse(values2[5], NUMBER_FORMAT);
+
+                    switch (values2[6])
+                    {
+                        case "0": envInfo.AccessType = EAccessType.Unrestricted; break;
+                        case "1": envInfo.AccessType = EAccessType.Read; break;
+                        case "2": envInfo.AccessType = EAccessType.Write; break;
+                        case "3": envInfo.AccessType = EAccessType.ReadWrite; break;
+                        default: envInfo.AccessType = EAccessType.Unrestricted; break;
+                    }
+
+                    //envInfo.AccessType = values2[6];
+                    envInfo.AccessNode = values2[7].Replace(";", "", COMPARISON);
                 }
             }
         }
