@@ -252,6 +252,12 @@ namespace DBCHelper
                     }
                 }
 
+                if (rawLine.StartsWith(ATTRIBUTE_RELATIVE_IDENTIFIER, COMPARISON) || rawLine.StartsWith(ATTRIBUTE_DEF_REL_IDENTIFIER, COMPARISON))
+                {
+                    Debug.Assert(false);
+                    continue;
+                }
+
                 if (rawLine.StartsWith(ATTRIBUTE_DEF_DEFAULT_IDENTIFIER, COMPARISON))
                 {
                     string[] attributeDefaultData = rawLine.Split(' ');
@@ -574,7 +580,11 @@ namespace DBCHelper
                                 }
 
                                 signal.ValueTable = signalValueTable;
-                                ValueTableDictionary.Add(signalValueTable.ValueTableName, signalValueTable);
+
+                                if(!ValueTableDictionary.ContainsKey(signalValueTable.ValueTableName))
+                                {
+                                    ValueTableDictionary.Add(signalValueTable.ValueTableName, signalValueTable);
+                                }
 
                                 break;
                             }
@@ -594,7 +604,7 @@ namespace DBCHelper
                     splitData = new string[] { "|", "@", "(", ",", ")", "[", "]", " " };
                     string[] values2 = values[1].Split(splitData, StringSplitOptions.RemoveEmptyEntries);
 
-                    switch(values2[0])
+                    switch (values2[0])
                     {
                         case "0": envInfo.VariableType = EVariableType.IntegerType; break;
                         case "1": envInfo.VariableType = EVariableType.FloatType; break;
