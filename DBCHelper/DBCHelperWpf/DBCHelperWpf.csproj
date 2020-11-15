@@ -6,4 +6,18 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Assets\home.png" />
+    <None Remove="Assets\welcome.jpeg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="3.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\home.png" />
+    <Resource Include="Assets\welcome.jpeg" />
+  </ItemGroup>
+
 </Project>
