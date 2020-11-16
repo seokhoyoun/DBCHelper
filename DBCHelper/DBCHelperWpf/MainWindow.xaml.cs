@@ -1,4 +1,5 @@
 ﻿using BeautySolutions.View.ViewModel;
+using DBCHelperWpf.View;
 using DropDownMenu;
 using MaterialDesignThemes.Wpf;
 using System;
@@ -28,7 +29,9 @@ namespace DBCHelperWpf
             InitializeComponent();
 
             var menuRegister = new List<SubItem>();
-            menuRegister.Add(new SubItem("Customer"));
+
+            CANView canView = new CANView();
+            menuRegister.Add(new SubItem("Customer", canView));
             menuRegister.Add(new SubItem("Providers"));
             menuRegister.Add(new SubItem("Employees"));
             menuRegister.Add(new SubItem("Products"));

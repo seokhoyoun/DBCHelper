@@ -5,7 +5,11 @@ VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBCHelper", "DBCHelper\DBCHelper.csproj", "{090DEEB1-921D-4EE7-801C-216A38E63D7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBCHelperWpf", "DBCHelperWpf\DBCHelperWpf.csproj", "{59A90F8D-CFDF-44C9-BEA4-3D5A32CAAAA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBCHelperWpf", "DBCHelperWpf\DBCHelperWpf.csproj", "{59A90F8D-CFDF-44C9-BEA4-3D5A32CAAAA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoApp", "..\..\..\Side\JoshSmith_MVVMDemo-master\DemoApp\DemoApp.csproj", "{26CFD5D4-94BD-40F3-BABA-E5FC7B6DB623}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationCAN", "CommunicationCAN\CommunicationCAN.csproj", "{32218FB4-9DA1-4A26-B74F-06FE43CAA013}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{59A90F8D-CFDF-44C9-BEA4-3D5A32CAAAA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59A90F8D-CFDF-44C9-BEA4-3D5A32CAAAA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59A90F8D-CFDF-44C9-BEA4-3D5A32CAAAA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26CFD5D4-94BD-40F3-BABA-E5FC7B6DB623}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26CFD5D4-94BD-40F3-BABA-E5FC7B6DB623}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26CFD5D4-94BD-40F3-BABA-E5FC7B6DB623}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26CFD5D4-94BD-40F3-BABA-E5FC7B6DB623}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32218FB4-9DA1-4A26-B74F-06FE43CAA013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32218FB4-9DA1-4A26-B74F-06FE43CAA013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32218FB4-9DA1-4A26-B74F-06FE43CAA013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32218FB4-9DA1-4A26-B74F-06FE43CAA013}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
