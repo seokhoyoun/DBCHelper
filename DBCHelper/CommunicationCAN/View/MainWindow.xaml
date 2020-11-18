@@ -27,34 +27,33 @@
 
         <Grid Margin="4">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="4" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
+            <!--<sidevw:SideMenuView />-->
             <Border 
-        Grid.Column="0" 
-        Style="{StaticResource MainBorderStyle}"
-        Width="170"
-        >
-                <HeaderedContentControl
-          Content="{Binding Path=Commands}"
-          ContentTemplate="{StaticResource CommandsTemplate}"
-          Header="Control Panel"
-          Style="{StaticResource MainHCCStyle}"
-          />
+                Grid.Column="0" 
+                Style="{StaticResource MainBorderStyle}"
+                Width="200">
+                
+                <ContentControl
+                    Content="{Binding Path=Commands}"
+                    ContentTemplate="{StaticResource CommandsTemplate}"
+                    Style="{StaticResource MainHCCStyle}"/>
             </Border>
+            
+            
 
             <Border
-        Grid.Column="2" 
-        Style="{StaticResource MainBorderStyle}"
-        >
-                <HeaderedContentControl 
-          Content="{Binding Path=Workspaces}"
-          ContentTemplate="{StaticResource WorkspacesTemplate}"
-          Header="Workspaces"
-          Style="{StaticResource MainHCCStyle}"
-          />
+                Grid.Column="2" 
+                Style="{StaticResource MainBorderStyle}">
+                
+                <ContentControl 
+                    Content="{Binding Path=Workspaces}"
+                    ContentTemplate="{StaticResource WorkspacesTemplate}"
+                    Style="{StaticResource MainHCCStyle}"/>
             </Border>
         </Grid>
     </DockPanel>

@@ -6,6 +6,7 @@ This resource dictionary is used by the MainWindow.
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:vm="clr-namespace:CommunicationCAN.ViewModel"
   xmlns:vw="clr-namespace:CommunicationCAN.View"
+  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
   >
 
   <!-- 
@@ -27,30 +28,8 @@ This resource dictionary is used by the MainWindow.
   <!-- 
   This style configures both of the main content areas in the main window.
   -->
-  <Style x:Key="MainHCCStyle" TargetType="{x:Type HeaderedContentControl}">
-    <Setter Property="HeaderTemplate">
-      <Setter.Value>
-        <DataTemplate>
-          <Border 
-            Background="{StaticResource Brush_HeaderBackground}" 
-            BorderBrush="LightGray" 
-            BorderThickness="1" 
-            CornerRadius="5" 
-            Margin="4" 
-            Padding="4" 
-            SnapsToDevicePixels="True" 
-            >
-            <TextBlock 
-              FontSize="14"
-              FontWeight="Bold"
-              Foreground="White" 
-              HorizontalAlignment="Center"  
-              Text="{TemplateBinding Content}" 
-              />
-          </Border>
-        </DataTemplate>
-      </Setter.Value>
-    </Setter>
+  <Style x:Key="MainHCCStyle" TargetType="{x:Type ContentControl}">
+    
     <Setter Property="IsTabStop" Value="False" />
     <Setter Property="Template">
       <Setter.Value>
@@ -58,13 +37,9 @@ This resource dictionary is used by the MainWindow.
         This template ensures that content of a HeaderedContentControl 
         fills the available vertical space. 
         -->
-        <ControlTemplate TargetType="{x:Type HeaderedContentControl}">
+        <ControlTemplate TargetType="{x:Type ContentControl}">
           <DockPanel>
-            <ContentPresenter 
-              DockPanel.Dock="Top"
-              ContentSource="Header" 
-              ContentTemplate="{TemplateBinding HeaderTemplate}" 
-              />
+           
             <ContentPresenter 
               ContentSource="Content" 
               ContentTemplate="{TemplateBinding ContentTemplate}" 
@@ -94,11 +69,29 @@ This resource dictionary is used by the MainWindow.
     <ItemsControl IsTabStop="False" ItemsSource="{Binding}" Margin="6,2">
       <ItemsControl.ItemTemplate>
         <DataTemplate>
-          <TextBlock Margin="2,6">
+                    <Grid>
+                        
+                    <materialDesign:PackIcon Kind="{Binding Path=Icon}" Width="15" Height="15" Margin="10 16" Foreground="White"/>
+                        <ListBoxItem x:Name="ListViewItemMenu" Padding="37 14" FontSize="15" Foreground="Black"/>
+                        <Expander x:Name="ExpanderMenu" Header="{Binding Path=DisplayName}" IsExpanded="False" Width="210" HorizontalAlignment="Right" Background="{x:Null}" Foreground="Black">
+                            <ListView x:Name="ListViewMenu" ItemsSource="{Binding Path=SubItems}" Foreground="Black" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                        <TextBlock Margin="2,6">
+                                            <Hyperlink Command="{Binding Path=Command}">
+                                              <TextBlock Text="{Binding Path=DisplayName}" />
+                                            </Hyperlink>
+                                        </TextBlock>
+                                    </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Expander>
+                    </Grid>
+                    <!--<TextBlock Margin="2,6">
             <Hyperlink Command="{Binding Path=Command}">
               <TextBlock Text="{Binding Path=DisplayName}" />
             </Hyperlink>
-          </TextBlock>
+          </TextBlock>-->
         </DataTemplate>
       </ItemsControl.ItemTemplate>
     </ItemsControl>

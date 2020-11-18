@@ -4,12 +4,9 @@ using System.Windows.Input;
 
 namespace CommunicationCAN.ViewModel
 {
-    /// <summary>
-    /// Represents an actionable item displayed by a View.
-    /// </summary>
-    public class CommandViewModel : ViewModelBase
+    public class SidMenuCommandViewModel : ViewModelBase
     {
-        public CommandViewModel(string displayName, ICommand command)
+        public SidMenuCommandViewModel(string displayName, ICommand command)
         {
             if (command == null)
                 throw new ArgumentNullException("command");

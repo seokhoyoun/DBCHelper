@@ -9,6 +9,7 @@ using System.Windows.Data;
 using CommunicationCAN.DataAccess;
 using CommunicationCAN.Model;
 using CommunicationCAN.Properties;
+using DBCHelper;
 
 namespace CommunicationCAN.ViewModel
 {
@@ -18,7 +19,7 @@ namespace CommunicationCAN.ViewModel
     public class MainWindowViewModel : WorkspaceViewModel
     {
         #region Fields
-                
+        ReadOnlyCollection<SidMenuCommandViewModel> mSideMenuCommands;
         ReadOnlyCollection<CommandViewModel> _commands;
         readonly CustomerRepository _customerRepository;
         ObservableCollection<WorkspaceViewModel> _workspaces;
@@ -31,12 +32,45 @@ namespace CommunicationCAN.ViewModel
         {
             base.DisplayName = Strings.MainWindowViewModel_DisplayName;
 
+            DBCParser dbcParser = new DBCParser();
+            dbcParser.LoadFile();
+
+            var nodes = dbcParser.NetworkNodeDictionary;
+            var messages = dbcParser.MessageDictionary;
+
             _customerRepository = new CustomerRepository(customerDataFile);
         }
 
         #endregion // Constructor
 
         #region Commands
+
+        public ReadOnlyCollection<CommandViewModel> SideMenuCommands
+        {
+            get
+            {
+                if (mSideMenuCommands == null)
+                {
+                    List<SidMenuCommandViewModel> cmds = this.CreateSideMenuCommands();
+                    mSideMenuCommands = new ReadOnlyCollection<SidMenuCommandViewModel>(cmds);
+                }
+                return _commands;
+            }
+        }
+
+        List<SidMenuCommandViewModel> CreateSideMenuCommands()
+        {
+            return new List<SidMenuCommandViewModel>
+            {
+                new SidMenuCommandViewModel(
+                    Strings.MainWindowViewModel_Command_ViewAllCustomers,
+                    new RelayCommand(param => this.ShowAllCustomers())),
+
+                new SidMenuCommandViewModel(
+                    Strings.MainWindowViewModel_Command_CreateNewCustomer,
+                    new RelayCommand(param => this.CreateNewCustomer()))
+            };
+        }
 
         /// <summary>
         /// Returns a read-only list of commands 
@@ -112,7 +146,7 @@ namespace CommunicationCAN.ViewModel
 
         #region Private Helpers
 
-        void CreateNewCustomer()
+        private void CreateNewCustomer()
         {
             Customer newCustomer = Customer.CreateNewCustomer();
             CustomerViewModel workspace = new CustomerViewModel(newCustomer, _customerRepository);
@@ -120,7 +154,7 @@ namespace CommunicationCAN.ViewModel
             this.SetActiveWorkspace(workspace);
         }
 
-        void ShowAllCustomers()
+        private void ShowAllCustomers()
         {
             AllCustomersViewModel workspace =
                 this.Workspaces.FirstOrDefault(vm => vm is AllCustomersViewModel)
@@ -135,7 +169,7 @@ namespace CommunicationCAN.ViewModel
             this.SetActiveWorkspace(workspace);
         }
 
-        void SetActiveWorkspace(WorkspaceViewModel workspace)
+        private void SetActiveWorkspace(WorkspaceViewModel workspace)
         {
             Debug.Assert(this.Workspaces.Contains(workspace));
 
