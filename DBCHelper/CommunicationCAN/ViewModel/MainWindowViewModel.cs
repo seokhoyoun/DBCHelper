@@ -5,6 +5,8 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using CommunicationCAN.DataAccess;
 using CommunicationCAN.Model;
@@ -38,15 +40,15 @@ namespace CommunicationCAN.ViewModel
             mDbcParser = new DBCParser();
             mDbcParser.LoadFile();
 
-            var nodes = mDbcParser.NetworkNodeDictionary;
-            var messages = mDbcParser.MessageDictionary;
+            //var nodes = mDbcParser.NetworkNodeDictionary;
+            //var messages = mDbcParser.MessageDictionary;
 
 
-            List<string> nodeList = new List<string>();
-            foreach(var keyStr in nodes.Keys)
-            {
-                nodeList.Add(keyStr);
-            }
+            //List<string> nodeList = new List<string>();
+            //foreach(var keyStr in nodes.Keys)
+            //{
+            //    nodeList.Add(keyStr);
+            //}
 
             _customerRepository = new CustomerRepository(customerDataFile);
         }
@@ -73,30 +75,32 @@ namespace CommunicationCAN.ViewModel
             var nodes = mDbcParser.NetworkNodeDictionary;
             var sideMenuList = new List<SideMenuViewModel>();
 
-
-            foreach (var node in nodes)
-            {
-                List<SignalCAN> signalList = (List<SignalCAN>)node.Value.SignalList;
-
-                ObservableCollection<SideMenuItemViewModel> subItems = new ObservableCollection<SideMenuItemViewModel>();
-
-                for (int i = 0; i < signalList.Count; i++)
+          
+                foreach (var node in nodes)
                 {
-                    subItems.Add(new SideMenuItemViewModel(
-                        signalList[i].SignalName,
-                        new RelayCommand(param => CreateNewCustomer()),
-                        PackIconKind.Signal
+                    List<SignalCAN> signalList = (List<SignalCAN>)node.Value.SignalList;
+
+                    List<SideMenuItemViewModel> subItems = new List<SideMenuItemViewModel>();
+
+                    for (int i = 0; i < signalList.Count; i++)
+                    {
+                        subItems.Add(new SideMenuItemViewModel(
+                            signalList[i].SignalName,
+                            new RelayCommand(param => CreateNewCustomer())
+                            ));
+                    }
+
+                    sideMenuList.Add(new SideMenuViewModel(
+                        node.Key,
+                        //new RelayCommand(param => ShowSignalView(signalList)),
+                        new RelayCommand(param => ShowAllCustomers()),
+                        subItems
                         ));
+
+                    Thread.Sleep(10);
                 }
 
-                sideMenuList.Add(new SideMenuViewModel(
-                    node.Key,
-                    //new RelayCommand(param => ShowSignalView(signalList)),
-                    new RelayCommand(param => CreateNewCustomer()),
-                    subItems,
-                    PackIconKind.Package
-                    ));
-            }
+            
 
             return sideMenuList;
             //return new List<SideMenuViewModel>

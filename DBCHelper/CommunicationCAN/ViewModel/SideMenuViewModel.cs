@@ -8,7 +8,11 @@ namespace CommunicationCAN.ViewModel
 {
     public class SideMenuViewModel : ViewModelBase
     {
-        public SideMenuViewModel(string displayName, ICommand command, ObservableCollection<SideMenuItemViewModel> viewModels, PackIconKind icon)
+        public ICommand Command { get; private set; }
+
+        public IList<SideMenuItemViewModel> SubItems { get; private set; } 
+
+        public SideMenuViewModel(string displayName, ICommand command, IList<SideMenuItemViewModel> viewModels)
         {
             if (command == null)
                 throw new ArgumentNullException("command");
@@ -16,13 +20,8 @@ namespace CommunicationCAN.ViewModel
             base.DisplayName = displayName;
             this.Command = command;
             SubItems = viewModels;
-            Icon = icon;
+
         }
 
-        public PackIconKind Icon { get; private set; }
-
-        public ICommand Command { get; private set; }
-
-        public IList<SideMenuItemViewModel> SubItems { get; private set; } 
     }
 }

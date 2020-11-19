@@ -8,9 +8,7 @@ namespace CommunicationCAN.ViewModel
     {
         public ICommand Command { get; private set; }
 
-        public PackIconKind Icon { get; private set; }
-
-        public SideMenuItemViewModel(string displayName, ICommand command, PackIconKind icon)
+        public SideMenuItemViewModel(string displayName, ICommand command)
         {
             if (command == null)
             {
@@ -19,7 +17,6 @@ namespace CommunicationCAN.ViewModel
 
             base.DisplayName = displayName;
             Command = command;
-            Icon = icon;
         }
     }
 }

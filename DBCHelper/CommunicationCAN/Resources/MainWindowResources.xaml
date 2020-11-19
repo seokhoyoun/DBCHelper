@@ -69,17 +69,39 @@ This resource dictionary is used by the MainWindow.
         <ItemsControl IsTabStop="False" ItemsSource="{Binding}" Margin="5,2">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <materialDesign:PackIcon Kind="{Binding Path=Icon}" Width="15" Height="15" Margin="10 16" Foreground="DodgerBlue"/>
-                        <ListBoxItem x:Name="ListViewItemMenu" FontSize="13" Foreground="Black"/>
-                        <Expander x:Name="ExpanderMenu" Header="{Binding Path=DisplayName}"  IsExpanded="False" Width="240" HorizontalAlignment="Right" Background="{x:Null}" Foreground="Black">
-                            <ListView x:Name="ListViewMenu" ItemsSource="{Binding Path=SubItems}" Foreground="Black" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                    <Grid >
+                        <!--<materialDesign:PackIcon Kind="{Binding Path=Icon}" Width="15" Height="15" Margin="10 16" Foreground="DodgerBlue"/>-->
+                        <!--<ToggleButton Command="{Binding Command}" Width="50" HorizontalAlignment="Left" />-->
+
+                        <!--123-->
+                        <!--<materialDesign:PackIcon Kind="{Binding Path=Icon}" Width="25" Height="25" Foreground="DodgerBlue" Margin="1 5 0 0" />-->
+                        <!--</Button>-->
+                        <Expander x:Name="ExpanderMenu"   IsExpanded="False" FontSize="12" Width="220"  HorizontalAlignment="Left" Background="{x:Null}" >
+                            <Expander.Header>
+                                <TextBlock Margin="10 1">
+                                    <Hyperlink  Command="{Binding Path=Command}" TextDecorations="">
+                                        <!--<Hyperlink.Style>
+                                            <Style TargetType="Hyperlink"
+                                                   BasedOn="{StaticResource {x:Type Hyperlink}}">
+                                                <Setter Property="Foreground" Value="HotPink"/>
+                                            </Style>
+                                        </Hyperlink.Style>-->
+                                        <materialDesign:PackIcon Kind="Package" Width="14" Height="12" Foreground="HotPink"/>
+                                        <TextBlock FontSize="13" Text="{Binding Path=DisplayName}" FontWeight="SemiBold" />
+                                        </Hyperlink>
+                                </TextBlock>
+                            </Expander.Header>
+                            <ListView x:Name="ListViewMenu" ItemsSource="{Binding Path=SubItems}"
+                                      Background="{x:Null}"
+                                      BorderBrush="{x:Null}"
+                                      Foreground="Black" VirtualizingStackPanel.IsVirtualizing="True"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                                      VirtualizingStackPanel.VirtualizationMode="Recycling" >
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        
                                         <TextBlock Margin="10 1">
                                                 <Hyperlink Command="{Binding Path=Command}" TextDecorations="">
-                                                    <materialDesign:PackIcon Kind="{Binding Path=Icon}" Width="13" Height="11" Foreground="Red"/>
+                                                    <materialDesign:PackIcon Kind="Signal" Width="13" Height="11" Foreground="Red"/>
                                                     <TextBlock FontSize="11" Text="{Binding Path=DisplayName}" />
                                                 </Hyperlink>
                                             </TextBlock>
@@ -87,6 +109,9 @@ This resource dictionary is used by the MainWindow.
                                 </ListView.ItemTemplate>
                             </ListView>
                         </Expander>
+                        <!--<Button Background="{x:Null}" BorderBrush="{x:Null}" Command="{Binding Command}" Width="30">
+                            <materialDesign:PackIcon Kind="Plus" Width="50" Height="80" Foreground="Black"/>
+                        </Button>-->
                     </Grid>
                     <!--<TextBlock Margin="2,6">
             <Hyperlink Command="{Binding Path=Command}">
