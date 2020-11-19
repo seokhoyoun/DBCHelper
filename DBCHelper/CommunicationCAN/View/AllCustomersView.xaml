@@ -27,7 +27,6 @@
         <DataTemplate>
           <TextBlock 
             x:Name="txt" 
-            Background="{StaticResource Brush_HeaderBackground}"
             FontWeight="Bold"
             Foreground="White"
             Margin="1"

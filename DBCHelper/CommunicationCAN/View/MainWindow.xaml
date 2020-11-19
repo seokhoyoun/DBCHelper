@@ -20,7 +20,9 @@
                     <MenuItem Header="E_xit" Command="{Binding Path=CloseCommand}" />
                 </MenuItem>
                 <MenuItem Header="_Edit" />
-                <MenuItem Header="_Options" />
+                <MenuItem Header="_Options">
+                    <MenuItem Header="_Show Messages" />
+                </MenuItem>
                 <MenuItem Header="_Help" />
             </Menu>
         </DockPanel>
@@ -36,12 +38,13 @@
             <Border 
                 Grid.Column="0" 
                 Style="{StaticResource MainBorderStyle}"
-                Width="200">
-                
-                <ContentControl
-                    Content="{Binding Path=Commands}"
-                    ContentTemplate="{StaticResource CommandsTemplate}"
-                    Style="{StaticResource MainHCCStyle}"/>
+                Width="300">
+                <ScrollViewer VerticalScrollBarVisibility="Visible">
+                    <ContentControl
+                        Content="{Binding Path=SideMenuCommands}"
+                        ContentTemplate="{StaticResource CommandsTemplate}"
+                        Style="{StaticResource MainHCCStyle}"/>
+                </ScrollViewer>
             </Border>
             
             

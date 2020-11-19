@@ -10,6 +10,7 @@ using CommunicationCAN.DataAccess;
 using CommunicationCAN.Model;
 using CommunicationCAN.Properties;
 using DBCHelper;
+using MaterialDesignThemes.Wpf;
 
 namespace CommunicationCAN.ViewModel
 {
@@ -19,7 +20,9 @@ namespace CommunicationCAN.ViewModel
     public class MainWindowViewModel : WorkspaceViewModel
     {
         #region Fields
-        ReadOnlyCollection<SidMenuCommandViewModel> mSideMenuCommands;
+        private DBCParser mDbcParser;
+
+        ReadOnlyCollection<SideMenuViewModel> mSideMenuCommands;
         ReadOnlyCollection<CommandViewModel> _commands;
         readonly CustomerRepository _customerRepository;
         ObservableCollection<WorkspaceViewModel> _workspaces;
@@ -32,11 +35,18 @@ namespace CommunicationCAN.ViewModel
         {
             base.DisplayName = Strings.MainWindowViewModel_DisplayName;
 
-            DBCParser dbcParser = new DBCParser();
-            dbcParser.LoadFile();
+            mDbcParser = new DBCParser();
+            mDbcParser.LoadFile();
 
-            var nodes = dbcParser.NetworkNodeDictionary;
-            var messages = dbcParser.MessageDictionary;
+            var nodes = mDbcParser.NetworkNodeDictionary;
+            var messages = mDbcParser.MessageDictionary;
+
+
+            List<string> nodeList = new List<string>();
+            foreach(var keyStr in nodes.Keys)
+            {
+                nodeList.Add(keyStr);
+            }
 
             _customerRepository = new CustomerRepository(customerDataFile);
         }
@@ -45,31 +55,60 @@ namespace CommunicationCAN.ViewModel
 
         #region Commands
 
-        public ReadOnlyCollection<CommandViewModel> SideMenuCommands
+        public ReadOnlyCollection<SideMenuViewModel> SideMenuCommands
         {
             get
             {
                 if (mSideMenuCommands == null)
                 {
-                    List<SidMenuCommandViewModel> cmds = this.CreateSideMenuCommands();
-                    mSideMenuCommands = new ReadOnlyCollection<SidMenuCommandViewModel>(cmds);
+                    List<SideMenuViewModel> cmds = this.CreateSideMenuCommands();
+                    mSideMenuCommands = new ReadOnlyCollection<SideMenuViewModel>(cmds);
                 }
-                return _commands;
+                return mSideMenuCommands;
             }
         }
 
-        List<SidMenuCommandViewModel> CreateSideMenuCommands()
+        List<SideMenuViewModel> CreateSideMenuCommands()
         {
-            return new List<SidMenuCommandViewModel>
-            {
-                new SidMenuCommandViewModel(
-                    Strings.MainWindowViewModel_Command_ViewAllCustomers,
-                    new RelayCommand(param => this.ShowAllCustomers())),
+            var nodes = mDbcParser.NetworkNodeDictionary;
+            var sideMenuList = new List<SideMenuViewModel>();
 
-                new SidMenuCommandViewModel(
-                    Strings.MainWindowViewModel_Command_CreateNewCustomer,
-                    new RelayCommand(param => this.CreateNewCustomer()))
-            };
+
+            foreach (var node in nodes)
+            {
+                List<SignalCAN> signalList = (List<SignalCAN>)node.Value.SignalList;
+
+                ObservableCollection<SideMenuItemViewModel> subItems = new ObservableCollection<SideMenuItemViewModel>();
+
+                for (int i = 0; i < signalList.Count; i++)
+                {
+                    subItems.Add(new SideMenuItemViewModel(
+                        signalList[i].SignalName,
+                        new RelayCommand(param => CreateNewCustomer()),
+                        PackIconKind.Signal
+                        ));
+                }
+
+                sideMenuList.Add(new SideMenuViewModel(
+                    node.Key,
+                    //new RelayCommand(param => ShowSignalView(signalList)),
+                    new RelayCommand(param => CreateNewCustomer()),
+                    subItems,
+                    PackIconKind.Package
+                    ));
+            }
+
+            return sideMenuList;
+            //return new List<SideMenuViewModel>
+            //{
+            //    new SideMenuViewModel(
+            //        Strings.MainWindowViewModel_Command_ViewAllCustomers,
+            //        new RelayCommand(param => this.ShowAllCustomers())),
+
+            //    new SideMenuViewModel(
+            //        Strings.MainWindowViewModel_Command_CreateNewCustomer,
+            //        new RelayCommand(param => this.CreateNewCustomer()))
+            //};
         }
 
         /// <summary>
@@ -145,6 +184,11 @@ namespace CommunicationCAN.ViewModel
         #endregion // Workspaces
 
         #region Private Helpers
+
+        private void ShowSignalView(List<SignalCAN> signalList)
+        {
+            SignalListViewModel signalListViewModel = new SignalListViewModel();
+        }
 
         private void CreateNewCustomer()
         {
