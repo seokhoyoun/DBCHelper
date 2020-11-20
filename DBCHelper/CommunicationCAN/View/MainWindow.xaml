@@ -27,7 +27,7 @@
             </Menu>
         </DockPanel>
 
-        <Grid Margin="4">
+        <Grid Margin="4" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="4" />
@@ -39,7 +39,7 @@
                 Grid.Column="0" 
                 Style="{StaticResource MainBorderStyle}"
                 Width="300">
-                <ScrollViewer VerticalScrollBarVisibility="Visible">
+                <ScrollViewer>
                     <ContentControl
                         Content="{Binding Path=SideMenuCommands}"
                         ContentTemplate="{StaticResource CommandsTemplate}"
@@ -56,7 +56,8 @@
                 <ContentControl 
                     Content="{Binding Path=Workspaces}"
                     ContentTemplate="{StaticResource WorkspacesTemplate}"
-                    Style="{StaticResource MainHCCStyle}"/>
+                        Style="{StaticResource MainHCCStyle}"
+                    />
             </Border>
         </Grid>
     </DockPanel>

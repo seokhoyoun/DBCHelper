@@ -15,5 +15,14 @@ namespace DBCHelper
         public IList<AttributeCAN> AttributeList { get; private set; } = new List<AttributeCAN>();
 
         #endregion
+
+        #region Constructor
+
+        public NetworkNodeCAN(string nodeName)
+        {
+            NodeName = nodeName;
+        }
+
+        #endregion
     }
 }

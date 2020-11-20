@@ -9,6 +9,10 @@ namespace CommunicationCAN.ViewModel
     /// </summary>
     public class CommandViewModel : ViewModelBase
     {
+        public ICommand Command { get; private set; }
+
+        public ObservableCollection<string> SubItems { get; private set; } = new ObservableCollection<string>();
+
         public CommandViewModel(string displayName, ICommand command)
         {
             if (command == null)
@@ -18,8 +22,5 @@ namespace CommunicationCAN.ViewModel
             this.Command = command;
         }
 
-        public ICommand Command { get; private set; }
-
-        public ObservableCollection<string> SubItems { get; private set; } = new ObservableCollection<string>();
     }
 }

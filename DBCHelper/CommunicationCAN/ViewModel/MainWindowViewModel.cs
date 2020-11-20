@@ -75,32 +75,32 @@ namespace CommunicationCAN.ViewModel
             var nodes = mDbcParser.NetworkNodeDictionary;
             var sideMenuList = new List<SideMenuViewModel>();
 
-          
-                foreach (var node in nodes)
+
+            foreach (var node in nodes)
+            {
+                List<SignalCAN> signalList = (List<SignalCAN>)node.Value.SignalList;
+
+                List<SideMenuItemViewModel> subItems = new List<SideMenuItemViewModel>();
+
+                for (int i = 0; i < signalList.Count; i++)
                 {
-                    List<SignalCAN> signalList = (List<SignalCAN>)node.Value.SignalList;
-
-                    List<SideMenuItemViewModel> subItems = new List<SideMenuItemViewModel>();
-
-                    for (int i = 0; i < signalList.Count; i++)
-                    {
-                        subItems.Add(new SideMenuItemViewModel(
-                            signalList[i].SignalName,
-                            new RelayCommand(param => CreateNewCustomer())
-                            ));
-                    }
-
-                    sideMenuList.Add(new SideMenuViewModel(
-                        node.Key,
-                        //new RelayCommand(param => ShowSignalView(signalList)),
-                        new RelayCommand(param => ShowAllCustomers()),
-                        subItems
+                    subItems.Add(new SideMenuItemViewModel(
+                        signalList[i].SignalName,
+                        new RelayCommand(param => CreateNewCustomer())
                         ));
-
-                    Thread.Sleep(10);
                 }
 
-            
+                sideMenuList.Add(new SideMenuViewModel(
+                    node.Key,
+                    //new RelayCommand(param => ShowSignalView(signalList)),
+                    new RelayCommand(param => ShowNodeSignalView(node.Value)),
+                    subItems
+                    ));
+
+                Thread.Sleep(10);
+            }
+
+
 
             return sideMenuList;
             //return new List<SideMenuViewModel>
@@ -150,6 +150,7 @@ namespace CommunicationCAN.ViewModel
 
         #region Workspaces
 
+
         /// <summary>
         /// Returns the collection of available workspaces to display.
         /// A 'workspace' is a ViewModel that can request to be closed.
@@ -189,9 +190,13 @@ namespace CommunicationCAN.ViewModel
 
         #region Private Helpers
 
-        private void ShowSignalView(List<SignalCAN> signalList)
+        private void ShowNodeSignalView(NetworkNodeCAN node)
         {
-            SignalListViewModel signalListViewModel = new SignalListViewModel();
+            SignalListViewModel workspace = new SignalListViewModel(node);
+            this.Workspaces.Add(workspace);
+
+
+            SetActiveWorkspace(workspace);
         }
 
         private void CreateNewCustomer()
@@ -205,7 +210,7 @@ namespace CommunicationCAN.ViewModel
         private void ShowAllCustomers()
         {
             AllCustomersViewModel workspace =
-                this.Workspaces.FirstOrDefault(vm => vm is AllCustomersViewModel)
+                this.Workspaces.FirstOrDefault(viewModel => viewModel is AllCustomersViewModel)
                 as AllCustomersViewModel;
 
             if (workspace == null)
@@ -220,7 +225,7 @@ namespace CommunicationCAN.ViewModel
         private void SetActiveWorkspace(WorkspaceViewModel workspace)
         {
             Debug.Assert(this.Workspaces.Contains(workspace));
-
+            
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Workspaces);
             if (collectionView != null)
                 collectionView.MoveCurrentTo(workspace);

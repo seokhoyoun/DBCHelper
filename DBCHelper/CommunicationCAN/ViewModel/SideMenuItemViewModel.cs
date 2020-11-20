@@ -18,5 +18,11 @@ namespace CommunicationCAN.ViewModel
             base.DisplayName = displayName;
             Command = command;
         }
+
+        protected override void OnDispose()
+        {
+            base.DisplayName = null;
+            this.Command = null;
+        }
     }
 }

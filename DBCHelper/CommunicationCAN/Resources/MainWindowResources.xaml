@@ -9,10 +9,9 @@ This resource dictionary is used by the MainWindow.
   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
   >
 
-    <!-- 
-  This template applies an AllCustomersView to an instance 
-  of the AllCustomersViewModel class shown in the main window.
-  -->
+    <!--This template applies an AllCustomersView to an instance 
+  of the AllCustomersViewModel class shown in the main window.-->
+
     <DataTemplate DataType="{x:Type vm:AllCustomersViewModel}">
         <vw:AllCustomersView />
     </DataTemplate>
@@ -23,6 +22,10 @@ This resource dictionary is used by the MainWindow.
   -->
     <DataTemplate DataType="{x:Type vm:CustomerViewModel}">
         <vw:CustomerView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SignalListViewModel}">
+        <vw:SignalListView/>
     </DataTemplate>
 
     <!-- 
@@ -70,22 +73,10 @@ This resource dictionary is used by the MainWindow.
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid >
-                        <!--<materialDesign:PackIcon Kind="{Binding Path=Icon}" Width="15" Height="15" Margin="10 16" Foreground="DodgerBlue"/>-->
-                        <!--<ToggleButton Command="{Binding Command}" Width="50" HorizontalAlignment="Left" />-->
-
-                        <!--123-->
-                        <!--<materialDesign:PackIcon Kind="{Binding Path=Icon}" Width="25" Height="25" Foreground="DodgerBlue" Margin="1 5 0 0" />-->
-                        <!--</Button>-->
                         <Expander x:Name="ExpanderMenu"   IsExpanded="False" FontSize="12" Width="220"  HorizontalAlignment="Left" Background="{x:Null}" >
                             <Expander.Header>
                                 <TextBlock Margin="10 1">
-                                    <Hyperlink  Command="{Binding Path=Command}" TextDecorations="">
-                                        <!--<Hyperlink.Style>
-                                            <Style TargetType="Hyperlink"
-                                                   BasedOn="{StaticResource {x:Type Hyperlink}}">
-                                                <Setter Property="Foreground" Value="HotPink"/>
-                                            </Style>
-                                        </Hyperlink.Style>-->
+                                    <Hyperlink  Command="{Binding Path=Command}" TextDecorations="">                  
                                         <materialDesign:PackIcon Kind="Package" Width="14" Height="12" Foreground="HotPink"/>
                                         <TextBlock FontSize="13" Text="{Binding Path=DisplayName}" FontWeight="SemiBold" />
                                         </Hyperlink>
@@ -109,15 +100,8 @@ This resource dictionary is used by the MainWindow.
                                 </ListView.ItemTemplate>
                             </ListView>
                         </Expander>
-                        <!--<Button Background="{x:Null}" BorderBrush="{x:Null}" Command="{Binding Command}" Width="30">
-                            <materialDesign:PackIcon Kind="Plus" Width="50" Height="80" Foreground="Black"/>
-                        </Button>-->
+
                     </Grid>
-                    <!--<TextBlock Margin="2,6">
-            <Hyperlink Command="{Binding Path=Command}">
-              <TextBlock Text="{Binding Path=DisplayName}" />
-            </Hyperlink>
-          </TextBlock>-->
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
@@ -128,10 +112,11 @@ This resource dictionary is used by the MainWindow.
   a tab item with a close button.
   -->
     <DataTemplate x:Key="ClosableTabItemTemplate">
-        <DockPanel Width="120">
+        <DockPanel Width="120" >
             <Button 
         Command="{Binding Path=CloseCommand}"
-        Content="X"
+        BorderThickness="0"
+        Background="Transparent"
         Cursor="Hand"
         DockPanel.Dock="Right"
         Focusable="False"
@@ -142,24 +127,61 @@ This resource dictionary is used by the MainWindow.
         Padding="0"
         VerticalContentAlignment="Bottom"
         Width="16" Height="16" 
-        />
+        >
+                <materialDesign:PackIcon Kind="ExitToApp" Width="13" Height="12" Foreground="Red"/>
+
+            </Button>
             <ContentPresenter 
-        Content="{Binding Path=DisplayName}" 
-        VerticalAlignment="Center" 
-        />
+                Content="{Binding Path=DisplayName}" 
+                VerticalAlignment="Center" 
+             />
         </DockPanel>
     </DataTemplate>
+
+    <Style x:Key="TabItemStyle" TargetType="TabItem">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabItem">
+                    <DockPanel Width="120" >
+                        <Button 
+                                Command="{Binding Path=CloseCommand}"
+                                BorderThickness="0"
+                                Background="Transparent"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
+                                Focusable="False"
+                                FontFamily="Courier" 
+                                FontSize="9"
+                                FontWeight="Bold"  
+                                Margin="0,1,0,0"
+                                Padding="0"
+                                VerticalContentAlignment="Bottom"
+                                Width="16" Height="16" 
+                                >
+                            <materialDesign:PackIcon Kind="ExitToApp" Width="13" Height="12" Foreground="Red"/>
+
+                        </Button>
+                        <ContentPresenter 
+                Content="{Binding Path=DisplayName}" 
+                VerticalAlignment="Center" 
+             />
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <!--
   This template explains how to render the 'Workspace' content area in the main window.
   -->
     <DataTemplate x:Key="WorkspacesTemplate">
         <TabControl 
-      IsSynchronizedWithCurrentItem="True" 
-      ItemsSource="{Binding}" 
-      ItemTemplate="{StaticResource ClosableTabItemTemplate}"
-      Margin="4"
-      />
+            x:Name="WorkspaceTabControl"
+            IsSynchronizedWithCurrentItem="True"
+            ItemsSource="{Binding}" 
+            ItemContainerStyle="{StaticResource TabItemStyle}"
+            Margin="2"
+         />
     </DataTemplate>
 
 </ResourceDictionary>

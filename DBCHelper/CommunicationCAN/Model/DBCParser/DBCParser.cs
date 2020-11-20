@@ -93,7 +93,7 @@ namespace DBCHelper
                     string[] receivedNetworkNodes = rawLine.Split(' ');
                     for (int i = 1; i < receivedNetworkNodes.Length; i++)
                     {
-                        NetworkNodeDictionary.Add(receivedNetworkNodes[i], new NetworkNodeCAN());
+                        NetworkNodeDictionary.Add(receivedNetworkNodes[i], new NetworkNodeCAN(receivedNetworkNodes[i]));
                     }
 
                     continue;
@@ -105,7 +105,7 @@ namespace DBCHelper
 
                     MessageCAN message = new MessageCAN();
                     message.ID = uint.Parse(receivedMessageData[1], NUMBER_FORMAT);
-                    message.MessageName = receivedMessageData[2];
+                    message.MessageName = receivedMessageData[2].Remove(receivedMessageData[2].Length-1, 1);
                     message.DLC = byte.Parse(receivedMessageData[3], NUMBER_FORMAT);
                     message.Transmitter = receivedMessageData[4];
 

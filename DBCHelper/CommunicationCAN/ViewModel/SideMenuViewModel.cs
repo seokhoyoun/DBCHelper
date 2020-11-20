@@ -23,5 +23,18 @@ namespace CommunicationCAN.ViewModel
 
         }
 
+        protected override void OnDispose()
+        {
+            foreach (SideMenuItemViewModel sideMenuItem in this.SubItems)
+            {
+                sideMenuItem.Dispose();
+            }
+
+            SubItems.Clear();
+
+            SubItems = null;
+            this.Command = null;
+        }
+
     }
 }
