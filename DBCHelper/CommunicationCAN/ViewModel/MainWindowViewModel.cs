@@ -92,8 +92,7 @@ namespace CommunicationCAN.ViewModel
 
                 sideMenuList.Add(new SideMenuViewModel(
                     node.Key,
-                    //new RelayCommand(param => ShowSignalView(signalList)),
-                    new RelayCommand(param => ShowNodeSignalView(node.Value)),
+                    new RelayCommand(param => ShowNodeSignalsView(node.Value)),
                     subItems
                     ));
 
@@ -190,11 +189,19 @@ namespace CommunicationCAN.ViewModel
 
         #region Private Helpers
 
-        private void ShowNodeSignalView(NetworkNodeCAN node)
+        private void ShowNodeSignalsView(NetworkNodeCAN node)
         {
             SignalListViewModel workspace = new SignalListViewModel(node);
             this.Workspaces.Add(workspace);
 
+
+            SetActiveWorkspace(workspace);
+        }
+
+        private void ShowSignalDetailView(SignalCAN signal)
+        {
+            SignalDetailViewModel workspace = new SignalDetailViewModel(signal);
+            this.Workspaces.Add(workspace);
 
             SetActiveWorkspace(workspace);
         }
