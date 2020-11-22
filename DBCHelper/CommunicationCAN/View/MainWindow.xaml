@@ -34,7 +34,12 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!--<sidevw:SideMenuView />-->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="4"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
             <Border 
                 Grid.Column="0" 
                 Style="{StaticResource MainBorderStyle}"
@@ -58,6 +63,16 @@
                     ContentTemplate="{StaticResource WorkspacesTemplate}"
                         Style="{StaticResource MainHCCStyle}"
                     />
+            </Border>
+
+            <Border
+                Grid.ColumnSpan="3"
+                Grid.Row="2"
+                Style="{StaticResource MainBorderStyle}">
+
+                <ScrollViewer>
+                    
+                </ScrollViewer>
             </Border>
         </Grid>
     </DockPanel>

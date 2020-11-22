@@ -24,7 +24,7 @@ namespace CommunicationCAN.ViewModel
         #region Fields
         private DBCParser mDbcParser;
 
-        ReadOnlyCollection<SideMenuViewModel> mSideMenuCommands;
+        ReadOnlyCollection<CommandViewModel> mSideMenuCommands;
         ReadOnlyCollection<CommandViewModel> _commands;
         readonly CustomerRepository _customerRepository;
         ObservableCollection<WorkspaceViewModel> _workspaces;
@@ -57,93 +57,61 @@ namespace CommunicationCAN.ViewModel
 
         #region Commands
 
-        public ReadOnlyCollection<SideMenuViewModel> SideMenuCommands
+        public ReadOnlyCollection<CommandViewModel> SideMenuCommands
         {
             get
             {
                 if (mSideMenuCommands == null)
                 {
-                    List<SideMenuViewModel> cmds = this.CreateSideMenuCommands();
-                    mSideMenuCommands = new ReadOnlyCollection<SideMenuViewModel>(cmds);
+                    List<CommandViewModel> cmds = this.CreateSideMenuCommands();
+                    mSideMenuCommands = new ReadOnlyCollection<CommandViewModel>(cmds);
                 }
                 return mSideMenuCommands;
             }
         }
-
-        List<SideMenuViewModel> CreateSideMenuCommands()
+        private List<CommandViewModel> CreateSideMenuCommands()
         {
             var nodes = mDbcParser.NetworkNodeDictionary;
-            var sideMenuList = new List<SideMenuViewModel>();
+            var messages = mDbcParser.MessageDictionary;
 
+            List<CommandViewModel> sideMenuList = new List<CommandViewModel>();
 
-            foreach (var node in nodes)
+            List<CommandViewModel> nodeSubItems = new List<CommandViewModel>();
+            List<CommandViewModel> messageSubItems = new List<CommandViewModel>();
+
+            foreach (var item in nodes)
             {
-                List<SignalCAN> signalList = (List<SignalCAN>)node.Value.SignalList;
-
-                List<SideMenuItemViewModel> subItems = new List<SideMenuItemViewModel>();
-
-                for (int i = 0; i < signalList.Count; i++)
-                {
-                    subItems.Add(new SideMenuItemViewModel(
-                        signalList[i].SignalName,
-                        new RelayCommand(param => CreateNewCustomer())
-                        ));
-                }
-
-                sideMenuList.Add(new SideMenuViewModel(
-                    node.Key,
-                    new RelayCommand(param => ShowNodeSignalsView(node.Value)),
-                    subItems
-                    ));
-
-                Thread.Sleep(10);
+                nodeSubItems.Add(new CommandViewModel(displayName: item.Key,
+                                                      command: new RelayCommand(param => ShowWorkspaceView(new SignalListViewModel(item.Value.SignalList, item.Key))),
+                                                      subItems: null,
+                                                      icon: PackIconKind.Signal));
             }
 
 
+            CommandViewModel node = new CommandViewModel(displayName: "Nodes",
+                                                         command: new RelayCommand(param => ShowWorkspaceView(new NodeListViewModel(nodes, "Nodes"))),
+                                                         subItems: nodeSubItems,
+                                                         icon: PackIconKind.Package);
+
+            foreach (var item in messages)
+            {
+                messageSubItems.Add(new CommandViewModel(displayName: item.Value.MessageName,
+                                                         command: new RelayCommand(param => ShowWorkspaceView(new SignalListViewModel(item.Value.SignalList, item.Value.MessageName))),
+                                                         subItems: null,
+                                                         icon: PackIconKind.Mail));
+            }
+
+            CommandViewModel message = new CommandViewModel(displayName: "Messages",
+                                                            command: new RelayCommand(param => ShowWorkspaceView(new MessageListViewModel(messages, "Messages"))),
+                                                            subItems: messageSubItems,
+                                                            icon: PackIconKind.MailboxOpen);
+
+            sideMenuList.Add(node);
+            sideMenuList.Add(message);
 
             return sideMenuList;
-            //return new List<SideMenuViewModel>
-            //{
-            //    new SideMenuViewModel(
-            //        Strings.MainWindowViewModel_Command_ViewAllCustomers,
-            //        new RelayCommand(param => this.ShowAllCustomers())),
-
-            //    new SideMenuViewModel(
-            //        Strings.MainWindowViewModel_Command_CreateNewCustomer,
-            //        new RelayCommand(param => this.CreateNewCustomer()))
-            //};
         }
 
-        /// <summary>
-        /// Returns a read-only list of commands 
-        /// that the UI can display and execute.
-        /// </summary>
-        public ReadOnlyCollection<CommandViewModel> Commands
-        {
-            get
-            {
-                if (_commands == null)
-                {
-                    List<CommandViewModel> cmds = this.CreateCommands();
-                    _commands = new ReadOnlyCollection<CommandViewModel>(cmds);
-                }
-                return _commands;
-            }
-        }
-
-        List<CommandViewModel> CreateCommands()
-        {
-            return new List<CommandViewModel>
-            {
-                new CommandViewModel(
-                    Strings.MainWindowViewModel_Command_ViewAllCustomers,
-                    new RelayCommand(param => this.ShowAllCustomers())),
-
-                new CommandViewModel(
-                    Strings.MainWindowViewModel_Command_CreateNewCustomer,
-                    new RelayCommand(param => this.CreateNewCustomer()))
-            };
-        }
 
         #endregion // Commands
 
@@ -189,11 +157,34 @@ namespace CommunicationCAN.ViewModel
 
         #region Private Helpers
 
-        private void ShowNodeSignalsView(NetworkNodeCAN node)
+        private void ShowWorkspaceView(WorkspaceViewModel workspaceViewModel)
         {
-            SignalListViewModel workspace = new SignalListViewModel(node);
+            this.Workspaces.Add(workspaceViewModel);
+
+            SetActiveWorkspace(workspaceViewModel);
+        }
+
+        private void ShowSignalsView(IList<SignalCAN> signals, string displayName)
+        {
+            WorkspaceViewModel workspace = new SignalListViewModel((List<SignalCAN>)signals, displayName);
             this.Workspaces.Add(workspace);
 
+
+            SetActiveWorkspace(workspace);
+        }
+
+        private void ShowNodesView()
+        {
+            NodeListViewModel workspace = new NodeListViewModel(mDbcParser.NetworkNodeDictionary, "Nodes");
+            this.Workspaces.Add(workspace);
+
+            SetActiveWorkspace(workspace);
+        }
+
+        private void ShowMessagesView()
+        {
+            MessageListViewModel workspace = new MessageListViewModel(mDbcParser.MessageDictionary, "Messages");
+            this.Workspaces.Add(workspace);
 
             SetActiveWorkspace(workspace);
         }
@@ -232,7 +223,7 @@ namespace CommunicationCAN.ViewModel
         private void SetActiveWorkspace(WorkspaceViewModel workspace)
         {
             Debug.Assert(this.Workspaces.Contains(workspace));
-            
+
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Workspaces);
             if (collectionView != null)
                 collectionView.MoveCurrentTo(workspace);

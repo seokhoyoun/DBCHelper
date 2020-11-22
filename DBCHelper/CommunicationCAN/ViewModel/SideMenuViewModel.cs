@@ -10,9 +10,9 @@ namespace CommunicationCAN.ViewModel
     {
         public ICommand Command { get; private set; }
 
-        public IList<SideMenuItemViewModel> SubItems { get; private set; } 
+        public IList<SideMenuViewModel> SubItems { get; private set; } 
 
-        public SideMenuViewModel(string displayName, ICommand command, IList<SideMenuItemViewModel> viewModels)
+        public SideMenuViewModel(string displayName, ICommand command, IList<SideMenuViewModel> viewModels)
         {
             if (command == null)
                 throw new ArgumentNullException("command");
@@ -25,7 +25,7 @@ namespace CommunicationCAN.ViewModel
 
         protected override void OnDispose()
         {
-            foreach (SideMenuItemViewModel sideMenuItem in this.SubItems)
+            foreach (SideMenuViewModel sideMenuItem in this.SubItems)
             {
                 sideMenuItem.Dispose();
             }

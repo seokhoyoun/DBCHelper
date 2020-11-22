@@ -32,6 +32,7 @@ namespace DBCHelper
             set;
         }
 
+
         public IList<AttributeCAN> AttributeList
         {
             get;

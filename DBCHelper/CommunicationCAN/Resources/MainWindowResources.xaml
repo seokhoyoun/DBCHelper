@@ -27,6 +27,14 @@ This resource dictionary is used by the MainWindow.
     <DataTemplate DataType="{x:Type vm:SignalListViewModel}">
         <vw:SignalListView/>
     </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type vm:MessageListViewModel}">
+        <vw:MessageListView/>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type vm:NodeListViewModel}">
+        <vw:NodeListView/>
+    </DataTemplate>
 
     <!-- 
   This style configures both of the main content areas in the main window.
@@ -77,8 +85,8 @@ This resource dictionary is used by the MainWindow.
                             <Expander.Header>
                                 <TextBlock Margin="10 1">
                                     <Hyperlink  Command="{Binding Path=Command}" TextDecorations="">                  
-                                        <materialDesign:PackIcon Kind="Package" Width="14" Height="12" Foreground="HotPink"/>
-                                        <TextBlock FontSize="13" Text="{Binding Path=DisplayName}" FontWeight="SemiBold" />
+                                        <materialDesign:PackIcon Kind="{Binding Icon}" Width="18" Height="16" Foreground="HotPink"/>
+                                        <TextBlock FontSize="14" Text="{Binding Path=DisplayName}" FontWeight="SemiBold" Foreground="Black"/>
                                         </Hyperlink>
                                 </TextBlock>
                             </Expander.Header>
@@ -92,7 +100,7 @@ This resource dictionary is used by the MainWindow.
                                     <DataTemplate>
                                         <TextBlock Margin="10 1">
                                                 <Hyperlink Command="{Binding Path=Command}" TextDecorations="">
-                                                    <materialDesign:PackIcon Kind="Signal" Width="13" Height="11" Foreground="Red"/>
+                                                    <materialDesign:PackIcon Kind="{Binding Icon}" Width="13" Height="11" Foreground="Red"/>
                                                     <TextBlock FontSize="11" Text="{Binding Path=DisplayName}" />
                                                 </Hyperlink>
                                             </TextBlock>
@@ -142,7 +150,9 @@ This resource dictionary is used by the MainWindow.
         <Setter Property="Control.Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
-                    <DockPanel Width="120" >
+                    <Border Style="{StaticResource MainBorderStyle}">
+                        
+                    <DockPanel Width="100" Background="White">
                         <Button 
                                 Command="{Binding Path=CloseCommand}"
                                 BorderThickness="0"
@@ -161,11 +171,15 @@ This resource dictionary is used by the MainWindow.
                             <materialDesign:PackIcon Kind="ExitToApp" Width="13" Height="12" Foreground="Red"/>
 
                         </Button>
-                        <ContentPresenter 
-                Content="{Binding Path=DisplayName}" 
-                VerticalAlignment="Center" 
-             />
+                        <TextBlock 
+                            FontSize="11"
+                            FontWeight="Heavy"
+                            Padding="5"
+                            Text="{Binding Path=DisplayName}" 
+                            VerticalAlignment="Center" 
+                        />
                     </DockPanel>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

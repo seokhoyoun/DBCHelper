@@ -17,11 +17,11 @@ namespace CommunicationCAN.ViewModel
             private set;
         }
 
-        public SignalListViewModel(NetworkNodeCAN node)
+        public SignalListViewModel(IList<SignalCAN> signals, string displayName)
         {
-            base.DisplayName = node.NodeName;
+            base.DisplayName = displayName;
 
-            foreach (var signal in node.SignalList)
+            foreach (var signal in signals)
             {
                 _signalCollection.Add(signal);
             }
