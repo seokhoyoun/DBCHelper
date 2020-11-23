@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace DBCHelper
 {
@@ -32,7 +33,6 @@ namespace DBCHelper
             set;
         }
 
-
         public IList<AttributeCAN> AttributeList
         {
             get;
@@ -57,10 +57,13 @@ namespace DBCHelper
         #region Field
 
         private byte[] mMessageData;
-
+   
         #endregion
 
+
         #region public Method
+
+      
 
         public byte[] GetData()
         {

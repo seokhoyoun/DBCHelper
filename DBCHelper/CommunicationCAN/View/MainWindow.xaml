@@ -31,13 +31,17 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="4" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="4" />
                 <ColumnDefinition Width="*" />
+ 
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="3*"/>
                 <RowDefinition Height="4"/>
                 <RowDefinition Height="1*"/>
+                
             </Grid.RowDefinitions>
 
             <Border 
@@ -55,7 +59,8 @@
             
 
             <Border
-                Grid.Column="2" 
+                Grid.Column="2"
+                Grid.ColumnSpan="3"
                 Style="{StaticResource MainBorderStyle}">
                 
                 <ContentControl 
@@ -65,15 +70,30 @@
                     />
             </Border>
 
-            <Border
-                Grid.ColumnSpan="3"
+            <Border       
                 Grid.Row="2"
+                Grid.ColumnSpan="3"
                 Style="{StaticResource MainBorderStyle}">
 
-                <ScrollViewer>
-                    
-                </ScrollViewer>
+                    <ContentControl 
+                        Content="{Binding Path=FooterWorkspaces}"
+                        ContentTemplate="{StaticResource WorkspacesTemplate}"
+                        Style="{StaticResource MainHCCStyle}"
+                        />
             </Border>
+
+            <Border
+                Grid.Row="2"
+                Grid.Column="4"
+                Style="{StaticResource MainBorderStyle}">
+                
+                <ContentControl
+                        Content="{Binding Path=FooterMenuCommands}"
+                        ContentTemplate="{StaticResource CommandsTemplate}"
+                        Style="{StaticResource MainHCCStyle}"/>
+                
+            </Border>
+            
         </Grid>
     </DockPanel>
 </Window>

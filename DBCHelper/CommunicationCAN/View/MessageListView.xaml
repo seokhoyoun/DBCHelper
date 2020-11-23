@@ -29,21 +29,14 @@
         <DataGrid.ColumnHeaderStyle>
             <Style TargetType="DataGridColumnHeader">
                 <Setter Property="FontSize" Value="12" />
-                <Setter Property="HorizontalContentAlignment" Value="Center"/>
             </Style>
         </DataGrid.ColumnHeaderStyle>
         <DataGrid.Columns>
-            <DataGridTemplateColumn Header="Checked">
-                <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
-                        <CheckBox IsChecked="False"/>
-                    </DataTemplate>
-                </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
             <DataGridTextColumn Header="Message Name" Binding="{Binding MessageName }" Width="2*"/>
             <DataGridTextColumn Header="ID (HEX)" Binding="{Binding ID, StringFormat=X }" Width="1*"/>
             <DataGridTextColumn Header="DLC" Binding="{Binding DLC}" Width="0.5*"/>
             <DataGridTextColumn Header="Transmitter" Binding="{Binding Transmitter}" Width="1*"/>
+            <DataGridTextColumn Header="Comment" Binding="{Binding Comment}" Width="2*" />
         </DataGrid.Columns>
     </DataGrid>
 </UserControl>
