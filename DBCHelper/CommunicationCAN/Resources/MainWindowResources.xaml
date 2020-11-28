@@ -82,7 +82,7 @@ This resource dictionary is used by the MainWindow.
         </DoubleAnimationUsingKeyFrames>
     </Storyboard>
 
-    
+
     <!--
   This template explains how to render the list of commands on the left
   side in the main window (the 'Control Panel' area).
@@ -249,27 +249,48 @@ This resource dictionary is used by the MainWindow.
 
 
     <DataTemplate x:Key="FooterWorkspacesTemplate">
-        <StackPanel>
-            <Grid Height="150" Background="White" RenderTransformOrigin="0.5,0.5">
-                <Grid.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Grid.RenderTransform>
-                <Button x:Name="ButtonOpenMenu" Height="60" Width="60" Margin="5" HorizontalAlignment="Right" VerticalAlignment="Top"  Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E" >
-                    <materialDesign:PackIcon Kind="Menu" Width="25" Height="25"/>
-                </Button>
-                <Button x:Name="ButtonCloseMenu" Visibility="Collapsed" Height="60" Width="60" Margin="5" HorizontalAlignment="Right" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E" >
-                    <materialDesign:PackIcon Kind="ArrowLeft" Width="25" Height="25"/>
-                </Button>
+        <Grid Width="70" HorizontalAlignment="Right" Background="#FF31577E">
+            <Grid.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Indigo.xaml" />
+                    </ResourceDictionary.MergedDictionaries >
+                </ResourceDictionary>
+            </Grid.Resources>
+            <Grid.Effect>
+                <DropShadowEffect BlurRadius="2" ShadowDepth="1" Color="#FFAEAEAE"/>
+            </Grid.Effect>
+            <StackPanel>
+                <Grid Height="150" Background="White" RenderTransformOrigin="0.5,0.5">
+                    <Grid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Grid.RenderTransform>
+                    <Button x:Name="ButtonOpenMenu" Height="60" Width="60" Margin="5" HorizontalAlignment="Right" VerticalAlignment="Top"  Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E" >
+                        <materialDesign:PackIcon Kind="Menu" Width="25" Height="25"/>
+                    </Button>
+                    <Button x:Name="ButtonCloseMenu" Visibility="Collapsed" Height="60" Width="60" Margin="5" HorizontalAlignment="Right" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E" >
+                        <materialDesign:PackIcon Kind="ArrowLeft" Width="25" Height="25"/>
+                    </Button>
 
-                <Image Height="80" VerticalAlignment="Bottom"/>
-            </Grid>
+                    <Image Height="80" VerticalAlignment="Bottom"/>
 
-        </StackPanel>
+                </Grid>
+
+                <ListView 
+                ItemsSource="{Binding}"
+                ItemTemplate="{StaticResource FooterMenuCommandsTemplate}"
+                Foreground="#FF5C99D6"
+                />
+            </StackPanel>
+        </Grid>
     </DataTemplate>
 
 </ResourceDictionary>

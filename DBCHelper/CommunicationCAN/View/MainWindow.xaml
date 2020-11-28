@@ -31,7 +31,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="4" />
-                <ColumnDefinition Width="5*" />
+                <ColumnDefinition Width="6*" />
                 <ColumnDefinition Width="4" />
                 <ColumnDefinition Width="*" />
  
@@ -88,14 +88,11 @@
                 Grid.Column="4"
                 Style="{StaticResource MainBorderStyle}">
 
-                <Grid Background="#FF31577E">
                     
                 <ContentControl
                         Content="{Binding Path=FooterMenuCommands}"
-                        ContentTemplate="{StaticResource FooterMenuCommandsTemplate}"
-                        Background="#FF31577E"
+                        ContentTemplate="{StaticResource FooterWorkspacesTemplate}"
                         Style="{StaticResource MainHCCStyle}"/>
-                </Grid>
                 
             </Border>
             
