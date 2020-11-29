@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CommunicationCAN"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         MinWidth="650" MinHeight="420"
         Title="{Binding Path=DisplayName}"
@@ -88,12 +89,18 @@
                 Grid.Column="4"
                 Style="{StaticResource MainBorderStyle}">
 
-                    
+
                 <ContentControl
-                        Content="{Binding Path=FooterMenuCommands}"
-                        ContentTemplate="{StaticResource FooterWorkspacesTemplate}"
-                        Style="{StaticResource MainHCCStyle}"/>
-                
+                    Background="#FF5C99D6"
+                    Content="{Binding FooterMenuCommands}"
+                    ContentTemplate="{StaticResource FooterWorkspacesTemplate}"
+                        >
+                    
+                    
+                 
+                    
+                </ContentControl>
+
             </Border>
             
         </Grid>
