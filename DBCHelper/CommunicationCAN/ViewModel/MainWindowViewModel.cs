@@ -127,15 +127,34 @@ namespace CommunicationCAN.ViewModel
         {
             List<CommandViewModel> footerMenuList = new List<CommandViewModel>();
 
+            // TODO:: JSON format load maybe?
+
             CommandViewModel settingCmd = new CommandViewModel(
                 displayName: "Setting",
                 command: new RelayCommand(param => ShowFooterWorkspaceView(new CANCommunicationViewModel())),
                 subItems: null,
-                icon: PackIconKind.SettingsApplications
+                icon: PackIconKind.Menu
                 );
 
             footerMenuList.Add(settingCmd);
-            
+
+            CommandViewModel rawCanViewCmd = new CommandViewModel(
+                displayName: "CAN Raw View",
+                command: new RelayCommand(param => ShowFooterWorkspaceView(new CANCommunicationViewModel())),
+                subItems: null,
+                icon: PackIconKind.Walk
+                );
+
+            footerMenuList.Add(rawCanViewCmd);
+
+            CommandViewModel signalCanViewCmd = new CommandViewModel(
+                displayName: "CAN Signal View",
+                command: new RelayCommand(param => ShowFooterWorkspaceView(new CANCommunicationViewModel())),
+                subItems: null,
+                icon: PackIconKind.Signal
+                );
+
+            footerMenuList.Add(signalCanViewCmd);
 
             return footerMenuList;
         }

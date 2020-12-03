@@ -208,9 +208,12 @@ This resource dictionary is used by the MainWindow.
          />
     </DataTemplate>
 
-    <DataTemplate x:Key="FooterMenuCommandsTemplate" DataType="ListView">
-        <ListViewItem Content="{Binding DisplayName}" >
-        </ListViewItem>
+    <DataTemplate x:Key="SemiWorkspacesTemplate" >
+        <TabControl 
+            IsSynchronizedWithCurrentItem="True"
+            ItemsSource="{Binding}" 
+            Margin="2"
+         />
     </DataTemplate>
 
     <Style x:Key="SideMenuButtonStyle" TargetType="Button">
@@ -234,6 +237,75 @@ This resource dictionary is used by the MainWindow.
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="DefaultButtonStyle" TargetType="Button">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Tag}"  Value="True">
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard x:Name="blinking">
+                        <Storyboard RepeatBehavior="Forever">
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity" AutoReverse="true"
+                                         To="0.2" Duration="0:0:0.7">
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+                <DataTrigger.ExitActions>
+                    <StopStoryboard BeginStoryboardName="blinking" />
+
+                </DataTrigger.ExitActions>
+            </DataTrigger>
+            <!--<DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Tag}" Value="False">
+                <Setter Property="Opacity" Value="1"/>
+
+            </DataTrigger>-->
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled}" Value="False">
+                <Setter Property="Foreground" Value="Gray"/>
+
+            </DataTrigger>
+        </Style.Triggers>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Margin" Value="2 8"/>
+        <Setter Property="Height" Value="34"/>
+        <!--<Setter Property="HorizontalContentAlignment" Value="Center"/>-->
+        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <BulletDecorator Cursor="Hand">
+                        <!--Text element-->
+                        <Border CornerRadius="3" BorderBrush="#FFE2E2E2" BorderThickness="1">
+                            <Grid>
+
+                                <!--We don't need any bullet, cause our border is the switching element-->
+                                <!--<Border  Background="#FFCDCDCD" CornerRadius="1" Name="RadioMark" />-->
+                                <ContentPresenter VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Border.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="White" Offset="0" />
+                                    <GradientStop Color="#FFE2E2E2" Offset="1" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                    </BulletDecorator>
+
+                    <!--If item is checked, trigger the visibility of the mark-->
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter  Property="Opacity" Value="0.8"/>
+                        </Trigger>
+                        <!--<Trigger Property="IsEnabled" Value="True">
+                            <Setter Property="Background" Value="LightGray"/>
+                            <Setter Property="Foreground" Value="Gray"/>
+                        </Trigger>-->
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <DataTemplate x:Key="FooterWorkspacesTemplate">
         <ItemsControl ItemsSource="{Binding}">
             <ItemsControl.ItemsPanel>
@@ -244,8 +316,8 @@ This resource dictionary is used by the MainWindow.
             
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Style="{StaticResource SideMenuButtonStyle}" Command="{Binding Command}">
-                        <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource DefaultButtonStyle}" Command="{Binding Command}" Height="65">
+                        <StackPanel Orientation="Horizontal" >
                             <materialDesign:PackIcon Kind="{Binding Icon}" Height="25" Width="25" Margin="10"/>
                             <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" Margin="20 10"/>
                         </StackPanel>

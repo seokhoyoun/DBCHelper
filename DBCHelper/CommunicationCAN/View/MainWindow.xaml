@@ -9,6 +9,7 @@
         MinWidth="650" MinHeight="420"
         Title="{Binding Path=DisplayName}"
         WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
         >
     <Window.Resources>
         <ResourceDictionary Source="../Resources/MainWindowResources.xaml" />
@@ -78,7 +79,7 @@
 
                     <ContentControl 
                         Content="{Binding Path=FooterWorkspaces}"
-                        ContentTemplate="{StaticResource WorkspacesTemplate}"
+                        ContentTemplate="{StaticResource SemiWorkspacesTemplate}"
                         Style="{StaticResource MainHCCStyle}"
                         />
             </Border>
@@ -91,15 +92,10 @@
 
 
                 <ContentControl
-                    Background="#FF5C99D6"
                     Content="{Binding FooterMenuCommands}"
                     ContentTemplate="{StaticResource FooterWorkspacesTemplate}"
-                        >
-                    
-                    
-                 
-                    
-                </ContentControl>
+                        />
+
 
             </Border>
             
