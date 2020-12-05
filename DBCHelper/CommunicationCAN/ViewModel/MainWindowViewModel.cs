@@ -41,7 +41,7 @@ namespace CommunicationCAN.ViewModel
             base.DisplayName = Strings.MainWindowViewModel_DisplayName;
 
             mDbcParser = new DBCParser();
-            mDbcParser.LoadFile();
+            //mDbcParser.LoadFile();
 
             _customerRepository = new CustomerRepository(customerDataFile);
         }
@@ -131,7 +131,7 @@ namespace CommunicationCAN.ViewModel
 
             CommandViewModel settingCmd = new CommandViewModel(
                 displayName: "Setting",
-                command: new RelayCommand(param => ShowFooterWorkspaceView(new CANCommunicationViewModel())),
+                command: new RelayCommand(param => ShowSettingView()),
                 subItems: null,
                 icon: PackIconKind.Menu
                 );
@@ -227,9 +227,33 @@ namespace CommunicationCAN.ViewModel
 
         private void ShowFooterWorkspaceView(WorkspaceViewModel workspaceViewModel)
         {
-            this.FooterWorkspaces.Add(workspaceViewModel);
+            WorkspaceViewModel workspace =
+                this.FooterWorkspaces.FirstOrDefault(viewModel => viewModel is WorkspaceViewModel)
+                as WorkspaceViewModel;
+
+            if (workspace == null)
+            {
+                //workspace = new AllCustomersViewModel(_customerRepository);
+                workspace = workspaceViewModel;
+                this.FooterWorkspaces.Add(workspace);
+            }
 
             SetActiveFooterWorkspace(workspaceViewModel);
+        }
+
+        private void ShowSettingView()
+        {
+            CANCommunicationViewModel workspace =
+                this.FooterWorkspaces.FirstOrDefault(viewModel => viewModel is CANCommunicationViewModel)
+                as CANCommunicationViewModel;
+
+            if (workspace == null)
+            {
+                workspace = new CANCommunicationViewModel();
+                this.FooterWorkspaces.Add(workspace);
+            }
+
+            SetActiveFooterWorkspace(workspace);
         }
 
 

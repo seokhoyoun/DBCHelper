@@ -212,6 +212,7 @@ This resource dictionary is used by the MainWindow.
         <TabControl 
             IsSynchronizedWithCurrentItem="True"
             ItemsSource="{Binding}" 
+            ItemContainerStyle="{StaticResource TabItemStyle}"
             Margin="2"
          />
     </DataTemplate>
