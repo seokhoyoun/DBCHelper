@@ -293,7 +293,6 @@ namespace CommunicationCAN.ViewModel
         private void SetActiveFooterWorkspace(WorkspaceViewModel workspace)
         {
             Debug.Assert(this.FooterWorkspaces.Contains(workspace));
-
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.FooterWorkspaces);
             if (collectionView != null)
                 collectionView.MoveCurrentTo(workspace);
