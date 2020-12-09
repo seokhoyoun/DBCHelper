@@ -20,6 +20,7 @@
             <Menu KeyboardNavigation.TabNavigation="Cycle">
                 <MenuItem Header="_File">
                     <MenuItem Header="E_xit" Command="{Binding Path=CloseCommand}" />
+                    <MenuItem Header="L_oad" Command="{Binding Path=CloseCommand}" />
                 </MenuItem>
                 <MenuItem Header="_Edit" />
                 <MenuItem Header="_Options">

@@ -19,6 +19,54 @@ namespace CommunicationCAN.ViewModel
     /// </summary>
     public class MainWindowViewModel : WorkspaceViewModel
     {
+        #region Public Properties
+
+        #region Commands
+
+        public ReadOnlyCollection<CommandViewModel> MainMenuCommands
+        {
+            get
+            {
+                if (mSideMenuCommands == null)
+                {
+                    List<CommandViewModel> cmds = this.CreateSideMenuCommands();
+                    mSideMenuCommands = new ReadOnlyCollection<CommandViewModel>(cmds);
+                }
+                return mSideMenuCommands;
+            }
+        }
+
+
+        public ReadOnlyCollection<CommandViewModel> SideMenuCommands
+        {
+            get
+            {
+                if (mSideMenuCommands == null)
+                {
+                    List<CommandViewModel> cmds = this.CreateSideMenuCommands();
+                    mSideMenuCommands = new ReadOnlyCollection<CommandViewModel>(cmds);
+                }
+                return mSideMenuCommands;
+            }
+        }
+
+        public ReadOnlyCollection<CommandViewModel> FooterMenuCommands
+        {
+            get
+            {
+                if (mFooterMenuCommands == null)
+                {
+                    List<CommandViewModel> cmds = this.CreateFooterMenuCommands();
+                    mFooterMenuCommands = new ReadOnlyCollection<CommandViewModel>(cmds);
+                }
+                return mFooterMenuCommands;
+            }
+        }
+
+        #endregion // Commands
+
+        #endregion
+
         #region Fields
         private DBCParser mDbcParser;
 
@@ -48,33 +96,62 @@ namespace CommunicationCAN.ViewModel
 
         #endregion // Constructor
 
-        #region Commands
+        #region Workspaces
 
-        public ReadOnlyCollection<CommandViewModel> SideMenuCommands
+        public ObservableCollection<WorkspaceViewModel> FooterWorkspaces
         {
             get
             {
-                if (mSideMenuCommands == null)
+                if (mFooterWorkspaces == null)
                 {
-                    List<CommandViewModel> cmds = this.CreateSideMenuCommands();
-                    mSideMenuCommands = new ReadOnlyCollection<CommandViewModel>(cmds);
+                    mFooterWorkspaces = new ObservableCollection<WorkspaceViewModel>();
+                    mFooterWorkspaces.CollectionChanged += this.OnWorkspacesChanged;
                 }
-                return mSideMenuCommands;
+                return mFooterWorkspaces;
             }
         }
 
-        public ReadOnlyCollection<CommandViewModel> FooterMenuCommands
+        public ObservableCollection<WorkspaceViewModel> Workspaces
         {
             get
             {
-                if (mFooterMenuCommands == null)
+                if (mWorkSpaces == null)
                 {
-                    List<CommandViewModel> cmds = this.CreateFooterMenuCommands();
-                    mFooterMenuCommands = new ReadOnlyCollection<CommandViewModel>(cmds);
+                    mWorkSpaces = new ObservableCollection<WorkspaceViewModel>();
+                    mWorkSpaces.CollectionChanged += this.OnWorkspacesChanged;
                 }
-                return mFooterMenuCommands;
+                return mWorkSpaces;
             }
         }
+
+        void OnWorkspacesChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null && e.NewItems.Count != 0)
+                foreach (WorkspaceViewModel workspace in e.NewItems)
+                    workspace.RequestClose += this.OnWorkspaceRequestClose;
+
+            if (e.OldItems != null && e.OldItems.Count != 0)
+                foreach (WorkspaceViewModel workspace in e.OldItems)
+                    workspace.RequestClose -= this.OnWorkspaceRequestClose;
+        }
+
+        void OnWorkspaceRequestClose(object sender, EventArgs e)
+        {
+            WorkspaceViewModel workspace = sender as WorkspaceViewModel;
+            workspace.Dispose();
+
+            Workspaces.Remove(workspace);
+            FooterWorkspaces.Remove(workspace);
+        }
+
+        #endregion // Workspaces
+
+        #region Public Methods
+
+
+        #endregion
+
+        #region Private Helpers
 
         private List<CommandViewModel> CreateSideMenuCommands()
         {
@@ -159,65 +236,6 @@ namespace CommunicationCAN.ViewModel
             return footerMenuList;
         }
 
-        #endregion // Commands
-
-        #region Workspaces
-
-        public ObservableCollection<WorkspaceViewModel> FooterWorkspaces
-        {
-            get
-            {
-                if (mFooterWorkspaces == null)
-                {
-                    mFooterWorkspaces = new ObservableCollection<WorkspaceViewModel>();
-                    mFooterWorkspaces.CollectionChanged += this.OnWorkspacesChanged;
-                }
-                return mFooterWorkspaces;
-            }
-        }
-
-        public ObservableCollection<WorkspaceViewModel> Workspaces
-        {
-            get
-            {
-                if (mWorkSpaces == null)
-                {
-                    mWorkSpaces = new ObservableCollection<WorkspaceViewModel>();
-                    mWorkSpaces.CollectionChanged += this.OnWorkspacesChanged;
-                }
-                return mWorkSpaces;
-            }
-        }
-
-        void OnWorkspacesChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.NewItems != null && e.NewItems.Count != 0)
-                foreach (WorkspaceViewModel workspace in e.NewItems)
-                    workspace.RequestClose += this.OnWorkspaceRequestClose;
-
-            if (e.OldItems != null && e.OldItems.Count != 0)
-                foreach (WorkspaceViewModel workspace in e.OldItems)
-                    workspace.RequestClose -= this.OnWorkspaceRequestClose;
-        }
-
-        void OnWorkspaceRequestClose(object sender, EventArgs e)
-        {
-            WorkspaceViewModel workspace = sender as WorkspaceViewModel;
-            workspace.Dispose();
-
-            Workspaces.Remove(workspace);
-            FooterWorkspaces.Remove(workspace);
-        }
-
-        #endregion // Workspaces
-
-        #region Public Methods
-
-   
-        #endregion
-
-        #region Private Helpers
-
         private void ShowWorkspaceView(WorkspaceViewModel workspaceViewModel)
         {
             this.Workspaces.Add(workspaceViewModel);
@@ -256,7 +274,26 @@ namespace CommunicationCAN.ViewModel
             SetActiveFooterWorkspace(workspace);
         }
 
+        private void SetActiveWorkspace(WorkspaceViewModel workspace)
+        {
+            Debug.Assert(this.Workspaces.Contains(workspace));
 
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Workspaces);
+            if (collectionView != null)
+                collectionView.MoveCurrentTo(workspace);
+        }
+
+        private void SetActiveFooterWorkspace(WorkspaceViewModel workspace)
+        {
+            Debug.Assert(this.FooterWorkspaces.Contains(workspace));
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.FooterWorkspaces);
+            if (collectionView != null)
+                collectionView.MoveCurrentTo(workspace);
+        }
+
+        #endregion // Private Helpers
+
+        #region DEMO
 
         private void CreateNewCustomer()
         {
@@ -281,23 +318,6 @@ namespace CommunicationCAN.ViewModel
             this.SetActiveWorkspace(workspace);
         }
 
-        private void SetActiveWorkspace(WorkspaceViewModel workspace)
-        {
-            Debug.Assert(this.Workspaces.Contains(workspace));
-
-            ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Workspaces);
-            if (collectionView != null)
-                collectionView.MoveCurrentTo(workspace);
-        }
-
-        private void SetActiveFooterWorkspace(WorkspaceViewModel workspace)
-        {
-            Debug.Assert(this.FooterWorkspaces.Contains(workspace));
-            ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.FooterWorkspaces);
-            if (collectionView != null)
-                collectionView.MoveCurrentTo(workspace);
-        }
-
-        #endregion // Private Helpers
+        #endregion
     }
 }
