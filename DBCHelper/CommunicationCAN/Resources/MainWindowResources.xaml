@@ -69,15 +69,6 @@ This resource dictionary is used by the MainWindow.
         <Setter Property="SnapsToDevicePixels" Value="True" />
     </Style>
 
-
-
-
-    <!--
-  This template explains how to render the list of commands on the left
-  side in the main window (the 'Control Panel' area).
-  -->
-
-
     <DataTemplate x:Key="CommandsTemplate">
         <ItemsControl IsTabStop="False" ItemsSource="{Binding}" Margin="5,1">
             <ItemsControl.ItemTemplate>

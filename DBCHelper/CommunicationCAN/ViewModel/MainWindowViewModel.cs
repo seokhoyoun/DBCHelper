@@ -4,13 +4,16 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Data;
+using System.Windows.Input;
 using CommunicationCAN.DataAccess;
 using CommunicationCAN.Model;
 using CommunicationCAN.Properties;
 using DBCHelper;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
 
 namespace CommunicationCAN.ViewModel
 {
@@ -23,16 +26,15 @@ namespace CommunicationCAN.ViewModel
 
         #region Commands
 
-        public ReadOnlyCollection<CommandViewModel> MainMenuCommands
+        private RelayCommand _loadFileCommand;
+        public ICommand LoadFileCommand
         {
             get
             {
-                if (mSideMenuCommands == null)
-                {
-                    List<CommandViewModel> cmds = this.CreateSideMenuCommands();
-                    mSideMenuCommands = new ReadOnlyCollection<CommandViewModel>(cmds);
-                }
-                return mSideMenuCommands;
+                if (_loadFileCommand == null)
+                    _loadFileCommand = new RelayCommand(param => LoadFile());
+
+                return _loadFileCommand;
             }
         }
 
@@ -147,6 +149,13 @@ namespace CommunicationCAN.ViewModel
         #endregion // Workspaces
 
         #region Public Methods
+
+        public void LoadFile()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+
+            dialog.ShowDialog();
+        }
 
 
         #endregion
