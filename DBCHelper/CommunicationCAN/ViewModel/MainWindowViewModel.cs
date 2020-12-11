@@ -154,7 +154,12 @@ namespace CommunicationCAN.ViewModel
         {
             OpenFileDialog dialog = new OpenFileDialog();
 
-            dialog.ShowDialog();
+            dialog.Filter = "dbc Worksheets|*.dbc";
+
+            if(dialog.ShowDialog() == true)
+            {
+
+            }
         }
 
 

@@ -16,12 +16,14 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DataGrid ItemsSource="{Binding NodeCollection}" IsReadOnly="True" FontSize="11" HorizontalContentAlignment="Center" HorizontalAlignment="Center">
+    <DataGrid ItemsSource="{Binding NodeCollection}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="11" HorizontalContentAlignment="Center" HorizontalAlignment="Center">
         <DataGrid.ColumnHeaderStyle>
             <Style TargetType="DataGridColumnHeader">
                 <Setter Property="FontSize" Value="12" />
-                <Setter Property="HorizontalContentAlignment" Value="Center"/>
             </Style>
         </DataGrid.ColumnHeaderStyle>
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="Node Name" Binding="{Binding NodeName }" Width="2*"/>
+        </DataGrid.Columns>
     </DataGrid>
 </UserControl>
