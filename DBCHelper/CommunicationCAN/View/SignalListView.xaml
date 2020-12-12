@@ -22,7 +22,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DataGrid ItemsSource="{Binding SignalCollection}" IsReadOnly="True" FontSize="11" HorizontalContentAlignment="Center" HorizontalAlignment="Center">
+    <DataGrid ItemsSource="{Binding SignalCollection}" AlternationCount="2" IsReadOnly="True" FontSize="11" HorizontalContentAlignment="Center" HorizontalAlignment="Center">
         <DataGrid.ColumnHeaderStyle>
             <Style TargetType="DataGridColumnHeader">
                 <Setter Property="FontSize" Value="12" />

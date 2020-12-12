@@ -64,7 +64,6 @@ namespace DBCHelper
         private const StringComparison COMPARISON = StringComparison.OrdinalIgnoreCase;
         private readonly IFormatProvider NUMBER_FORMAT = CultureInfo.GetCultureInfo("en-US");
 
-        private string mPath;
 
         #endregion
 
@@ -75,12 +74,11 @@ namespace DBCHelper
             AttributeDictionary = new Dictionary<string, AttributeCAN>();
             ValueTableDictionary = new Dictionary<string, ValueTableCAN>();
 
-            mPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\\dbcsamp.dbc";
         }
 
-        public void LoadFile()
+        public void LoadFile(string filePath)
         {
-            using FileStream fileStream = new FileStream(mPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using StreamReader streamReader = new StreamReader(fileStream);
 
             string rawLine;

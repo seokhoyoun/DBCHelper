@@ -39,18 +39,20 @@ namespace CommunicationCAN.ViewModel
         }
 
 
-        public ReadOnlyCollection<CommandViewModel> SideMenuCommands
+        public ObservableCollection<CommandViewModel> SideMenuCommands
         {
-            get
-            {
-                if (mSideMenuCommands == null)
-                {
-                    List<CommandViewModel> cmds = this.CreateSideMenuCommands();
-                    mSideMenuCommands = new ReadOnlyCollection<CommandViewModel>(cmds);
-                }
-                return mSideMenuCommands;
-            }
-        }
+            //get
+            //{
+            //    if (mSideMenuCommands == null)
+            //    {
+            //        List<CommandViewModel> cmds = this.CreateSideMenuCommands();
+            //        mSideMenuCommands = new ObservableCollection<CommandViewModel>(cmds);
+            //    }
+            //    return mSideMenuCommands;
+            //}
+            get;
+            private set;
+        } = new ObservableCollection<CommandViewModel>();
 
         public ReadOnlyCollection<CommandViewModel> FooterMenuCommands
         {
@@ -73,7 +75,7 @@ namespace CommunicationCAN.ViewModel
         private DBCParser mDbcParser;
 
 
-        private ReadOnlyCollection<CommandViewModel> mSideMenuCommands;
+        //private ObservableCollection<CommandViewModel> mSideMenuCommands;
         private ReadOnlyCollection<CommandViewModel> mFooterMenuCommands;
 
         private ObservableCollection<WorkspaceViewModel> mWorkSpaces;
@@ -158,7 +160,14 @@ namespace CommunicationCAN.ViewModel
 
             if(dialog.ShowDialog() == true)
             {
+                string filePath = dialog.FileName;
 
+                //mSideMenuCommands.Clear();
+                //mSideMenuCommands = null;
+
+                mDbcParser.LoadFile(filePath);
+
+                CreateSideMenuCommands();
             }
         }
 
@@ -167,12 +176,12 @@ namespace CommunicationCAN.ViewModel
 
         #region Private Helpers
 
-        private List<CommandViewModel> CreateSideMenuCommands()
+        private void CreateSideMenuCommands()
         {
             var nodes = mDbcParser.NetworkNodeDictionary;
             var messages = mDbcParser.MessageDictionary;
 
-            List<CommandViewModel> sideMenuList = new List<CommandViewModel>();
+            //List<CommandViewModel> sideMenuList = new List<CommandViewModel>();
 
             List<CommandViewModel> nodeSubItems = new List<CommandViewModel>();
             List<CommandViewModel> messageSubItems = new List<CommandViewModel>();
@@ -208,10 +217,9 @@ namespace CommunicationCAN.ViewModel
                 subItems: messageSubItems,
                 icon: PackIconKind.MailboxOpen);
 
-            sideMenuList.Add(node);
-            sideMenuList.Add(message);
+            SideMenuCommands.Add(node);
+            SideMenuCommands.Add(message);
 
-            return sideMenuList;
         }
 
         private List<CommandViewModel> CreateFooterMenuCommands()

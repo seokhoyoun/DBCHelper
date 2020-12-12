@@ -69,6 +69,22 @@ This resource dictionary is used by the MainWindow.
         <Setter Property="SnapsToDevicePixels" Value="True" />
     </Style>
 
+    <Style TargetType="{x:Type DataGrid}">
+        <Setter Property="Background" Value="#FFF" />
+        <Setter Property="AlternationCount" Value="2" />
+    </Style>
+
+    <Style x:Key="" TargetType="{x:Type DataGridRow}">
+        <Style.Triggers>
+            <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                <Setter Property="Background" Value="#CCC"></Setter>
+            </Trigger>
+            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                <Setter Property="Background" Value="#EEE"></Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <DataTemplate x:Key="CommandsTemplate">
         <ItemsControl IsTabStop="False" ItemsSource="{Binding}" Margin="5,1">
             <ItemsControl.ItemTemplate>
@@ -305,15 +321,15 @@ This resource dictionary is used by the MainWindow.
                     <StackPanel />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            
+
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Style="{StaticResource DefaultButtonStyle}" Command="{Binding Command}" Height="65">
-                        <StackPanel Orientation="Horizontal" >
-                            <materialDesign:PackIcon Kind="{Binding Icon}" Height="25" Width="25" Margin="10"/>
-                            <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" Margin="20 10"/>
-                        </StackPanel>
-                    </Button>
+                        <Button Style="{StaticResource DefaultButtonStyle}" Command="{Binding Command}" Height="45">
+                            <StackPanel Orientation="Horizontal" >
+                                <materialDesign:PackIcon Kind="{Binding Icon}" Height="23" Width="23" Margin="5 8"/>
+                                <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" Margin="12 8"/>
+                            </StackPanel>
+                        </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

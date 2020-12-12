@@ -9,7 +9,6 @@
         MinWidth="650" MinHeight="420"
         Title="{Binding Path=DisplayName}"
         WindowStartupLocation="CenterScreen"
-        WindowState="Maximized"
         >
     <Window.Resources>
         <ResourceDictionary Source="../Resources/MainWindowResources.xaml" />

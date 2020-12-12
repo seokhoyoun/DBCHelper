@@ -16,7 +16,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DataGrid ItemsSource="{Binding NodeCollection}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="11" HorizontalContentAlignment="Center" HorizontalAlignment="Center">
+    <DataGrid ItemsSource="{Binding NodeCollection}" AlternationCount="2" AutoGenerateColumns="False" IsReadOnly="True" FontSize="11" HorizontalContentAlignment="Center" HorizontalAlignment="Center">
         <DataGrid.ColumnHeaderStyle>
             <Style TargetType="DataGridColumnHeader">
                 <Setter Property="FontSize" Value="12" />

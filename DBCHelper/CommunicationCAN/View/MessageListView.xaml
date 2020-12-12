@@ -24,8 +24,8 @@
 
         </ResourceDictionary>
     </UserControl.Resources>
-        
-    <DataGrid ItemsSource="{Binding MessageCollection}" AutoGenerateColumns="False" FontSize="11" HorizontalContentAlignment="Center" HorizontalAlignment="Center" >
+
+    <DataGrid ItemsSource="{Binding MessageCollection}" AlternationCount="2" AutoGenerateColumns="False" FontSize="11" HorizontalContentAlignment="Center" HorizontalAlignment="Center" >
         <DataGrid.ColumnHeaderStyle>
             <Style TargetType="DataGridColumnHeader">
                 <Setter Property="FontSize" Value="12" />
