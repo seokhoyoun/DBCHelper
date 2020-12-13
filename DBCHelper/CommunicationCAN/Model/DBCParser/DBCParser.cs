@@ -631,7 +631,13 @@ namespace DBCHelper
             }
         }
 
-
+        public void ClearCollections()
+        {
+            NetworkNodeDictionary.Clear();
+            MessageDictionary.Clear();
+            AttributeDictionary.Clear();
+            ValueTableDictionary.Clear();
+        }
 
     }
 

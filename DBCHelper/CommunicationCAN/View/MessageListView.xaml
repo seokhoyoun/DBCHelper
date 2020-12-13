@@ -31,6 +31,15 @@
                 <Setter Property="FontSize" Value="12" />
             </Style>
         </DataGrid.ColumnHeaderStyle>
+        <DataGrid.RowStyle>
+            <Style TargetType="{x:Type DataGridRow}">
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                        <Setter Property="Background" Value="#EEE"></Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </DataGrid.RowStyle>
         <DataGrid.Columns>
             <DataGridTextColumn Header="Message Name" Binding="{Binding MessageName }" Width="2*"/>
             <DataGridTextColumn Header="ID (HEX)" Binding="{Binding ID, StringFormat=X }" Width="1*"/>

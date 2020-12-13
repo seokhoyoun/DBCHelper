@@ -22,12 +22,31 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DataGrid ItemsSource="{Binding SignalCollection}" AlternationCount="2" IsReadOnly="True" FontSize="11" HorizontalContentAlignment="Center" HorizontalAlignment="Center">
+    <DataGrid ItemsSource="{Binding SignalCollection}"  AutoGenerateColumns="False" AlternationCount="2" IsReadOnly="True" FontSize="11" HorizontalContentAlignment="Center" >
         <DataGrid.ColumnHeaderStyle>
             <Style TargetType="DataGridColumnHeader">
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
             </Style>
         </DataGrid.ColumnHeaderStyle>
+        <DataGrid.RowStyle>
+            <Style TargetType="{x:Type DataGridRow}">
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                        <Setter Property="Background" Value="#EEE"></Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </DataGrid.RowStyle>
+
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="Signal Name" Binding="{Binding SignalName }" />
+            <DataGridTextColumn Header="ID (HEX)" Binding="{Binding ID, StringFormat=X }"/>
+            <DataGridTextColumn Header="Start Bit" Binding="{Binding StartBit}" />
+            <DataGridTextColumn Header="Length" Binding="{Binding Length}" />
+            <DataGridTextColumn Header="Byte Order" Binding="{Binding ByteOrder}" />
+            <DataGridTextColumn Header="Value Type" Binding="{Binding ValueType}" />
+            <DataGridTextColumn Header="Comment" Binding="{Binding Comment}" />
+        </DataGrid.Columns>
     </DataGrid>
 </UserControl>

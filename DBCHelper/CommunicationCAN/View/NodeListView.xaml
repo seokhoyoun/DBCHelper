@@ -22,6 +22,15 @@
                 <Setter Property="FontSize" Value="12" />
             </Style>
         </DataGrid.ColumnHeaderStyle>
+        <DataGrid.RowStyle>
+            <Style TargetType="{x:Type DataGridRow}">
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                        <Setter Property="Background" Value="#EEE"></Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </DataGrid.RowStyle>
         <DataGrid.Columns>
             <DataGridTextColumn Header="Node Name" Binding="{Binding NodeName }" Width="2*"/>
         </DataGrid.Columns>

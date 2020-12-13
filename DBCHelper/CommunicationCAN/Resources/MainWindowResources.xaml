@@ -69,22 +69,6 @@ This resource dictionary is used by the MainWindow.
         <Setter Property="SnapsToDevicePixels" Value="True" />
     </Style>
 
-    <Style TargetType="{x:Type DataGrid}">
-        <Setter Property="Background" Value="#FFF" />
-        <Setter Property="AlternationCount" Value="2" />
-    </Style>
-
-    <Style x:Key="" TargetType="{x:Type DataGridRow}">
-        <Style.Triggers>
-            <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                <Setter Property="Background" Value="#CCC"></Setter>
-            </Trigger>
-            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                <Setter Property="Background" Value="#EEE"></Setter>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
     <DataTemplate x:Key="CommandsTemplate">
         <ItemsControl IsTabStop="False" ItemsSource="{Binding}" Margin="5,1">
             <ItemsControl.ItemTemplate>

@@ -162,10 +162,11 @@ namespace CommunicationCAN.ViewModel
             {
                 string filePath = dialog.FileName;
 
-                //mSideMenuCommands.Clear();
-                //mSideMenuCommands = null;
+                mDbcParser.ClearCollections();
 
                 mDbcParser.LoadFile(filePath);
+
+                SideMenuCommands.Clear();
 
                 CreateSideMenuCommands();
             }
