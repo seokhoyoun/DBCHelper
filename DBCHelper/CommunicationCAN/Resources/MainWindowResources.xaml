@@ -29,6 +29,10 @@ This resource dictionary is used by the MainWindow.
         <vw:NodeListView/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type vm:SettingViewModel}">
+        <vw:SettingView/>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type vm:CANCommunicationViewModel}">
         <vw:CANCommunicationView/>
     </DataTemplate>

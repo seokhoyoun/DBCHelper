@@ -284,13 +284,13 @@ namespace CommunicationCAN.ViewModel
 
         private void ShowSettingView()
         {
-            CANCommunicationViewModel workspace =
-                this.FooterWorkspaces.FirstOrDefault(viewModel => viewModel is CANCommunicationViewModel)
-                as CANCommunicationViewModel;
+            SettingViewModel workspace =
+                this.FooterWorkspaces.FirstOrDefault(viewModel => viewModel is SettingViewModel)
+                as SettingViewModel;
 
             if (workspace == null)
             {
-                workspace = new CANCommunicationViewModel();
+                workspace = new SettingViewModel();
                 this.FooterWorkspaces.Add(workspace);
             }
 
