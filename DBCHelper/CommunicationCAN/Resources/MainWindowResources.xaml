@@ -302,7 +302,7 @@ This resource dictionary is used by the MainWindow.
         </Setter>
     </Style>
 
-    <DataTemplate x:Key="FooterWorkspacesTemplate">
+    <DataTemplate x:Key="RightSideMenuTemplate">
         <ItemsControl ItemsSource="{Binding}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

@@ -20,8 +20,6 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
-
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -47,5 +45,12 @@
             <DataGridTextColumn Header="Transmitter" Binding="{Binding Transmitter}" Width="1*"/>
             <DataGridTextColumn Header="Comment" Binding="{Binding Comment}" Width="2*" />
         </DataGrid.Columns>
+        <DataGrid.InputBindings>
+            <MouseBinding 
+                MouseAction="LeftClick"
+                Command="{Binding MessageRowClickCommand}"
+                CommandParameter=""
+                />
+        </DataGrid.InputBindings>
     </DataGrid>
 </UserControl>

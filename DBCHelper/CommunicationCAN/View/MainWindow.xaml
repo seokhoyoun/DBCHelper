@@ -51,7 +51,7 @@
                 Width="300">
                 <ScrollViewer>
                     <ContentControl
-                        Content="{Binding Path=SideMenuCommands}"
+                        Content="{Binding Path=LeftSideMenuCommands}"
                         ContentTemplate="{StaticResource CommandsTemplate}"
                         Style="{StaticResource MainHCCStyle}"/>
                 </ScrollViewer>
@@ -70,19 +70,6 @@
                     />
             </Border>
 
-            <Border       
-                Grid.Row="2"
-                Grid.ColumnSpan="3"
-                
-                Style="{StaticResource MainBorderStyle}">
-
-                    <ContentControl 
-                        Content="{Binding Path=FooterWorkspaces}"
-                        ContentTemplate="{StaticResource SemiWorkspacesTemplate}"
-                        Style="{StaticResource MainHCCStyle}"
-                        />
-            </Border>
-
             <Border
                 Grid.Row="0"
                 Grid.RowSpan="3"
@@ -91,12 +78,26 @@
 
 
                 <ContentControl
-                    Content="{Binding FooterMenuCommands}"
-                    ContentTemplate="{StaticResource FooterWorkspacesTemplate}"
+                    Content="{Binding RightSideMenuCommands}"
+                    ContentTemplate="{StaticResource RightSideMenuTemplate}"
                         />
 
 
             </Border>
+            
+            <Border       
+                Grid.Row="2"
+                Grid.ColumnSpan="3"
+                
+                Style="{StaticResource MainBorderStyle}">
+
+                    <ContentControl 
+                        Content="{Binding Path=FooterWorkspaces}"
+                        ContentTemplate="{StaticResource WorkspacesTemplate}"
+                        Style="{StaticResource MainHCCStyle}"
+                        />
+            </Border>
+
             
         </Grid>
     </DockPanel>

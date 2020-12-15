@@ -38,32 +38,23 @@ namespace CommunicationCAN.ViewModel
             }
         }
 
-
-        public ObservableCollection<CommandViewModel> SideMenuCommands
+        public ObservableCollection<CommandViewModel> LeftSideMenuCommands
         {
-            //get
-            //{
-            //    if (mSideMenuCommands == null)
-            //    {
-            //        List<CommandViewModel> cmds = this.CreateSideMenuCommands();
-            //        mSideMenuCommands = new ObservableCollection<CommandViewModel>(cmds);
-            //    }
-            //    return mSideMenuCommands;
-            //}
+           
             get;
             private set;
         } = new ObservableCollection<CommandViewModel>();
 
-        public ReadOnlyCollection<CommandViewModel> FooterMenuCommands
+        public ReadOnlyCollection<CommandViewModel> RightSideMenuCommands
         {
             get
             {
-                if (mFooterMenuCommands == null)
+                if (mRightSideMenuCommands == null)
                 {
-                    List<CommandViewModel> cmds = this.CreateFooterMenuCommands();
-                    mFooterMenuCommands = new ReadOnlyCollection<CommandViewModel>(cmds);
+                    List<CommandViewModel> cmds = this.CreateRightSideMenuCommands();
+                    mRightSideMenuCommands = new ReadOnlyCollection<CommandViewModel>(cmds);
                 }
-                return mFooterMenuCommands;
+                return mRightSideMenuCommands;
             }
         }
 
@@ -76,7 +67,7 @@ namespace CommunicationCAN.ViewModel
 
 
         //private ObservableCollection<CommandViewModel> mSideMenuCommands;
-        private ReadOnlyCollection<CommandViewModel> mFooterMenuCommands;
+        private ReadOnlyCollection<CommandViewModel> mRightSideMenuCommands;
 
         private ObservableCollection<WorkspaceViewModel> mWorkSpaces;
         private ObservableCollection<WorkspaceViewModel> mFooterWorkspaces;
@@ -166,9 +157,9 @@ namespace CommunicationCAN.ViewModel
 
                 mDbcParser.LoadFile(filePath);
 
-                SideMenuCommands.Clear();
+                LeftSideMenuCommands.Clear();
 
-                CreateSideMenuCommands();
+                CreateLeftSideMenuCommands();
             }
         }
 
@@ -177,7 +168,7 @@ namespace CommunicationCAN.ViewModel
 
         #region Private Helpers
 
-        private void CreateSideMenuCommands()
+        private void CreateLeftSideMenuCommands()
         {
             var nodes = mDbcParser.NetworkNodeDictionary;
             var messages = mDbcParser.MessageDictionary;
@@ -218,14 +209,14 @@ namespace CommunicationCAN.ViewModel
                 subItems: messageSubItems,
                 icon: PackIconKind.MailboxOpen);
 
-            SideMenuCommands.Add(node);
-            SideMenuCommands.Add(message);
+            LeftSideMenuCommands.Add(node);
+            LeftSideMenuCommands.Add(message);
 
         }
 
-        private List<CommandViewModel> CreateFooterMenuCommands()
+        private List<CommandViewModel> CreateRightSideMenuCommands()
         {
-            List<CommandViewModel> footerMenuList = new List<CommandViewModel>();
+            List<CommandViewModel> menuList = new List<CommandViewModel>();
 
             // TODO:: JSON format load maybe?
 
@@ -236,7 +227,7 @@ namespace CommunicationCAN.ViewModel
                 icon: PackIconKind.Menu
                 );
 
-            footerMenuList.Add(settingCmd);
+            menuList.Add(settingCmd);
 
             CommandViewModel rawCanViewCmd = new CommandViewModel(
                 displayName: "CAN Raw View",
@@ -245,7 +236,7 @@ namespace CommunicationCAN.ViewModel
                 icon: PackIconKind.Walk
                 );
 
-            footerMenuList.Add(rawCanViewCmd);
+            menuList.Add(rawCanViewCmd);
 
             CommandViewModel signalCanViewCmd = new CommandViewModel(
                 displayName: "CAN Signal View",
@@ -254,9 +245,9 @@ namespace CommunicationCAN.ViewModel
                 icon: PackIconKind.Signal
                 );
 
-            footerMenuList.Add(signalCanViewCmd);
+            menuList.Add(signalCanViewCmd);
 
-            return footerMenuList;
+            return menuList;
         }
 
         private void ShowWorkspaceView(WorkspaceViewModel workspaceViewModel)
