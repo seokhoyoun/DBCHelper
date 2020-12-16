@@ -23,10 +23,11 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <DataGrid ItemsSource="{Binding MessageCollection}" AlternationCount="2" AutoGenerateColumns="False" FontSize="11" HorizontalContentAlignment="Center" HorizontalAlignment="Center" >
+    <DataGrid ItemsSource="{Binding MessageCollection}" SelectedItem="{Binding SelectedMessage}" AlternationCount="2" AutoGenerateColumns="False" FontSize="11" HorizontalContentAlignment="Center" HorizontalAlignment="Center" >
         <DataGrid.ColumnHeaderStyle>
             <Style TargetType="DataGridColumnHeader">
                 <Setter Property="FontSize" Value="12" />
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
             </Style>
         </DataGrid.ColumnHeaderStyle>
         <DataGrid.RowStyle>
@@ -39,18 +40,19 @@
             </Style>
         </DataGrid.RowStyle>
         <DataGrid.Columns>
+            <DataGridTemplateColumn >
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ToggleButton />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
             <DataGridTextColumn Header="Message Name" Binding="{Binding MessageName }" Width="2*"/>
             <DataGridTextColumn Header="ID (HEX)" Binding="{Binding ID, StringFormat=X }" Width="1*"/>
             <DataGridTextColumn Header="DLC" Binding="{Binding DLC}" Width="0.5*"/>
             <DataGridTextColumn Header="Transmitter" Binding="{Binding Transmitter}" Width="1*"/>
             <DataGridTextColumn Header="Comment" Binding="{Binding Comment}" Width="2*" />
         </DataGrid.Columns>
-        <DataGrid.InputBindings>
-            <MouseBinding 
-                MouseAction="LeftClick"
-                Command="{Binding MessageRowClickCommand}"
-                CommandParameter=""
-                />
-        </DataGrid.InputBindings>
+        
     </DataGrid>
 </UserControl>

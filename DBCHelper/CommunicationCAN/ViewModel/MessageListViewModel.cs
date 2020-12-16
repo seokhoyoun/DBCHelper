@@ -13,6 +13,12 @@ namespace CommunicationCAN.ViewModel
             private set;
         } = new ObservableCollection<MessageCAN>();
 
+        public MessageCAN SelectedMessage
+        {
+            get;
+            set;
+        }
+
 
         public MessageListViewModel(Dictionary<uint, MessageCAN> messages, string displayName)
         {
