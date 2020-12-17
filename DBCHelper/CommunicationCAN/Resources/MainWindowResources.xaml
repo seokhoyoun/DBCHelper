@@ -33,8 +33,8 @@ This resource dictionary is used by the MainWindow.
         <vw:SettingView/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type vm:CANCommunicationViewModel}">
-        <vw:CANCommunicationView/>
+    <DataTemplate DataType="{x:Type vm:DetailCANMessageViewModel}">
+        <vw:DetailCANMessageView/>
     </DataTemplate>
 
     <!-- 

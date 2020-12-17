@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Windows.Data;
-using System.Windows.Input;
-using CommunicationCAN.DataAccess;
+﻿using CommunicationCAN.DataAccess;
 using CommunicationCAN.Model;
 using CommunicationCAN.Properties;
 using DBCHelper;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows.Data;
+using System.Windows.Input;
 
 namespace CommunicationCAN.ViewModel
 {
@@ -27,6 +26,7 @@ namespace CommunicationCAN.ViewModel
         #region Commands
 
         private RelayCommand _loadFileCommand;
+
         public ICommand LoadFileCommand
         {
             get
@@ -40,7 +40,6 @@ namespace CommunicationCAN.ViewModel
 
         public ObservableCollection<CommandViewModel> LeftSideMenuCommands
         {
-           
             get;
             private set;
         } = new ObservableCollection<CommandViewModel>();
@@ -58,13 +57,13 @@ namespace CommunicationCAN.ViewModel
             }
         }
 
-        #endregion // Commands
+        #endregion Commands
 
-        #endregion
+        #endregion Public Properties
 
         #region Fields
-        private DBCParser mDbcParser;
 
+        private DBCParser mDbcParser;
 
         //private ObservableCollection<CommandViewModel> mSideMenuCommands;
         private ReadOnlyCollection<CommandViewModel> mRightSideMenuCommands;
@@ -72,10 +71,12 @@ namespace CommunicationCAN.ViewModel
         private ObservableCollection<WorkspaceViewModel> mWorkSpaces;
         private ObservableCollection<WorkspaceViewModel> mFooterWorkspaces;
 
-        ReadOnlyCollection<CommandViewModel> _commands;
-        readonly CustomerRepository _customerRepository;
+        private DetailCANMessageViewModel mDetailCANMessageViewModel;
 
-        #endregion // Fields
+        private ReadOnlyCollection<CommandViewModel> _commands;
+        private readonly CustomerRepository _customerRepository;
+
+        #endregion Fields
 
         #region Constructor
 
@@ -89,7 +90,7 @@ namespace CommunicationCAN.ViewModel
             _customerRepository = new CustomerRepository(customerDataFile);
         }
 
-        #endregion // Constructor
+        #endregion Constructor
 
         #region Workspaces
 
@@ -119,7 +120,7 @@ namespace CommunicationCAN.ViewModel
             }
         }
 
-        void OnWorkspacesChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnWorkspacesChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null && e.NewItems.Count != 0)
                 foreach (WorkspaceViewModel workspace in e.NewItems)
@@ -130,7 +131,7 @@ namespace CommunicationCAN.ViewModel
                     workspace.RequestClose -= this.OnWorkspaceRequestClose;
         }
 
-        void OnWorkspaceRequestClose(object sender, EventArgs e)
+        private void OnWorkspaceRequestClose(object sender, EventArgs e)
         {
             WorkspaceViewModel workspace = sender as WorkspaceViewModel;
             workspace.Dispose();
@@ -139,7 +140,7 @@ namespace CommunicationCAN.ViewModel
             FooterWorkspaces.Remove(workspace);
         }
 
-        #endregion // Workspaces
+        #endregion Workspaces
 
         #region Public Methods
 
@@ -149,7 +150,7 @@ namespace CommunicationCAN.ViewModel
 
             dialog.Filter = "dbc Worksheets|*.dbc";
 
-            if(dialog.ShowDialog() == true)
+            if (dialog.ShowDialog() == true)
             {
                 string filePath = dialog.FileName;
 
@@ -163,8 +164,17 @@ namespace CommunicationCAN.ViewModel
             }
         }
 
+        public void DisplaySelectedMessage(MessageCAN message)
+        {
+            if(mDetailCANMessageViewModel == null)
+            {
+                mDetailCANMessageViewModel = new DetailCANMessageViewModel(message);
+            }
 
-        #endregion
+            ShowFooterWorkspaceView(mDetailCANMessageViewModel);
+        }
+
+        #endregion Public Methods
 
         #region Private Helpers
 
@@ -187,7 +197,6 @@ namespace CommunicationCAN.ViewModel
                     icon: PackIconKind.Signal));
             }
 
-
             CommandViewModel node = new CommandViewModel(
                 displayName: "Nodes",
                 command: new RelayCommand(param => ShowWorkspaceView(new NodeListViewModel(nodes, "Nodes"))),
@@ -205,13 +214,12 @@ namespace CommunicationCAN.ViewModel
 
             CommandViewModel message = new CommandViewModel(
                 displayName: "Messages",
-                command: new RelayCommand(param => ShowWorkspaceView(new MessageListViewModel(messages, "Messages"))),
+                command: new RelayCommand(param => ShowWorkspaceView(new MessageListViewModel(messages, "Messages", this))),
                 subItems: messageSubItems,
                 icon: PackIconKind.MailboxOpen);
 
             LeftSideMenuCommands.Add(node);
             LeftSideMenuCommands.Add(message);
-
         }
 
         private List<CommandViewModel> CreateRightSideMenuCommands()
@@ -305,7 +313,7 @@ namespace CommunicationCAN.ViewModel
                 collectionView.MoveCurrentTo(workspace);
         }
 
-        #endregion // Private Helpers
+        #endregion Private Helpers
 
         #region DEMO
 
@@ -332,6 +340,6 @@ namespace CommunicationCAN.ViewModel
             this.SetActiveWorkspace(workspace);
         }
 
-        #endregion
+        #endregion DEMO
     }
 }
