@@ -19,7 +19,7 @@ Load/Parse .dbc file and provides some function for signal input/output
 - Attribute Definition Relative(?)
 - Multiplexing
 
-```
+```C#
 // 지원하지 않는 기능 항목은 아래와 같이 Assert 처리 되어있음
 // 일반적으로 사용되지않거나 더 이상 쓰이지 않음(deprecated) 또는 해당 속성에 대한 이해 부족으로인해 미작성 됨
 // 필요에 따라 직접 구현하여 쓸 것.
