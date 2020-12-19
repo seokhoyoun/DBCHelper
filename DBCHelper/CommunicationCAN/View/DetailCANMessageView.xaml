@@ -32,7 +32,7 @@
             <TextBox Style="{StaticResource MaterialDesignTextBox}"/>
             <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="ID"/>
             <TextBox Style="{StaticResource MaterialDesignTextBox}"/>
-            <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="Message Name"/>
+            <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text=""/>
             <TextBox Style="{StaticResource MaterialDesignTextBox}"/>
         </StackPanel>
     </Grid>

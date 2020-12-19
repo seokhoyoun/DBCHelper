@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace DBCHelper
 {
@@ -59,7 +57,6 @@ namespace DBCHelper
         private byte[] mMessageData;
    
         #endregion
-
 
         #region public Method
 

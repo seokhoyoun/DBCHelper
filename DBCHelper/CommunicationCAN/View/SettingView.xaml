@@ -47,6 +47,10 @@
                 <ComboBox materialDesign:HintAssist.Hint="Databits" Width="250" Margin="5"/>
             </StackPanel>
         </StackPanel>
+
+        <StackPanel Grid.Column="2">
+            <Button Content="Save" Margin="5"/>
+        </StackPanel>
     </Grid>
 
 </UserControl>
