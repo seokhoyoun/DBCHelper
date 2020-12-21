@@ -90,13 +90,11 @@
                 Grid.ColumnSpan="3"
                 
                 Style="{StaticResource MainBorderStyle}">
-                <ScrollViewer >
                     <ContentControl 
                         Content="{Binding Path=FooterWorkspaces}"
                         ContentTemplate="{StaticResource WorkspacesTemplate}"
                         Style="{StaticResource MainHCCStyle}"
                         />
-                </ScrollViewer >
             </Border>
 
             

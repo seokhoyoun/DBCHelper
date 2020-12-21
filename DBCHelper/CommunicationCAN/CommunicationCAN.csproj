@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <Reference Include="vxlapi_NET">
-      <HintPath>..\..\..\..\..\Users\Public\Documents\Vector\XL Driver Library 11.6.12\bin\vxlapi_NET.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Users\Public\Documents\Vector XL Driver Library\bin\vxlapi_NET.dll</HintPath>
     </Reference>
   </ItemGroup>
 
