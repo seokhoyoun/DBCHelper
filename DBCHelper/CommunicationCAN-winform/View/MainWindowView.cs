@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DBCHelper;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,15 +11,22 @@ using System.Windows.Forms;
 
 namespace CommunicationCAN_winform
 {
+
     public partial class MainWindowView : Form
     {
+
+
         #region Public Properties
 
-        public List<string> NodeStringList
-        {
-            get;
-            private set;
-        } = new List<string>();
+
+
+        #endregion
+
+        #region Field
+
+        private DBCParser parser = new DBCParser();
+
+        
 
         #endregion
 
@@ -28,26 +36,57 @@ namespace CommunicationCAN_winform
         {
             InitializeComponent();
 
+            initializeCAN();
+
+            InitializeMainListView();
         }
 
         #endregion
 
         #region Public Methods
 
-        public void InitializeNodeListView()
+        public void initializeCAN()
         {
-            NodeStringList.Add("A1");
-            NodeStringList.Add("A2");
-            NodeStringList.Add("A3");
-            NodeStringList.Add("A4");
-            NodeStringList.Add("A5");
+            OpenFileDialog dialog = new OpenFileDialog();
 
+            dialog.Filter = "dbc Worksheets|*.dbc";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = dialog.FileName;
+
+                parser.ClearCollections();
+
+                parser.LoadFile(filePath);
+
+            }
         }
+
+        public void InitializeMainListView()
+        {
+            foreach(var item in parser.MessageDictionary)
+            {
+                listView1.Items.Add(item.Value.MessageName);
+            }
+        }
+
 
         #endregion
 
 
+        #region Event
 
 
+
+        #endregion
+
+        private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            
+            string itemString = e.Item.Text;
+
+            panel1.BackColor = Color.White;
+            
+        }
     }
 }

@@ -35,24 +35,26 @@
             // listView1
             // 
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(12, 12);
+            this.listView1.Location = new System.Drawing.Point(12, 20);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(121, 478);
+            this.listView1.Size = new System.Drawing.Size(200, 800);
             this.listView1.TabIndex = 1;
             this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Tile;
+            this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(139, 12);
+            this.panel1.Location = new System.Drawing.Point(250, 20);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(984, 478);
+            this.panel1.Size = new System.Drawing.Size(1000, 500);
             this.panel1.TabIndex = 2;
             // 
             // MainWindowView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1135, 502);
+            this.ClientSize = new System.Drawing.Size(1904, 761);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.listView1);
             this.Name = "MainWindowView";
