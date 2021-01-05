@@ -28,44 +28,45 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.treeView1 = new System.Windows.Forms.TreeView();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
-            // listView1
+            // dataGridView1
             // 
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(12, 20);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(200, 800);
-            this.listView1.TabIndex = 1;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Tile;
-            this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(344, 20);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(1096, 700);
+            this.dataGridView1.TabIndex = 2;
+            this.dataGridView1.Text = "dataGridView1";
             // 
-            // panel1
+            // treeView1
             // 
-            this.panel1.Location = new System.Drawing.Point(250, 20);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1000, 500);
-            this.panel1.TabIndex = 2;
+            this.treeView1.Location = new System.Drawing.Point(12, 20);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(300, 700);
+            this.treeView1.TabIndex = 3;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // MainWindowView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1904, 761);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.listView1);
+            this.ClientSize = new System.Drawing.Size(1504, 761);
+            this.Controls.Add(this.treeView1);
+            this.Controls.Add(this.dataGridView1);
             this.Name = "MainWindowView";
             this.Text = "CommunicationCAN";
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.TreeView treeView1;
     }
 }
 

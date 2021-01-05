@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBCHelperWpf", "DBCHelperWp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationCAN", "CommunicationCAN\CommunicationCAN.csproj", "{32218FB4-9DA1-4A26-B74F-06FE43CAA013}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationCAN-winform", "CommunicationCAN-winform\CommunicationCAN-winform.csproj", "{6683E04B-6147-4469-BF29-7AA149B0031B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationCAN-winform", "CommunicationCAN-winform\CommunicationCAN-winform.csproj", "{6683E04B-6147-4469-BF29-7AA149B0031B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{43026681-33D8-482E-82D5-8F2A941A798D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
