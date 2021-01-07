@@ -28,10 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
+            // 
+            // treeView1
+            // 
+            this.treeView1.Location = new System.Drawing.Point(12, 20);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(300, 700);
+            this.treeView1.TabIndex = 3;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // dataGridView1
             // 
@@ -41,14 +49,7 @@
             this.dataGridView1.Size = new System.Drawing.Size(1096, 700);
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.Text = "dataGridView1";
-            // 
-            // treeView1
-            // 
-            this.treeView1.Location = new System.Drawing.Point(12, 20);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(300, 700);
-            this.treeView1.TabIndex = 3;
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
             // 
             // MainWindowView
             // 
@@ -65,8 +66,9 @@
         }
 
         #endregion
-        private System.Windows.Forms.DataGridView dataGridView1;
+
         private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }
 

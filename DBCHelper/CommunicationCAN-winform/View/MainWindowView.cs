@@ -1,4 +1,5 @@
-﻿using DBCHelper;
+﻿using CommunicationCAN_winform.View.Unit;
+using DBCHelper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,6 +7,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -25,7 +27,7 @@ namespace CommunicationCAN_winform
 
         private DBCParser parser = new DBCParser();
 
-        private readonly string IMAGE_PATH =  $"..\\..\\..\\Images";
+        private readonly string IMAGE_PATH = $"..\\..\\..\\Images";
 
         private const string NETWORKS_NODE_NAME = "Nodes";
         private const string ATTRIBUTES_NAME = "Attributes";
@@ -75,7 +77,7 @@ namespace CommunicationCAN_winform
             }
         }
 
-       
+
 
         public void InitializeTreeView()
         {
@@ -84,7 +86,7 @@ namespace CommunicationCAN_winform
             imageList.Images.Add(Bitmap.FromFile($"{IMAGE_PATH}\\check.png"));
             imageList.Images.Add(Bitmap.FromFile($"{IMAGE_PATH}\\done.png"));
 
-            treeView1.ImageList = imageList;
+            //treeView1.ImageList = imageList;
 
             TreeNode nodeNetwork = new TreeNode(NETWORKS_NODE_NAME, NETWORKS_IMAGE_INDEX, NETWORKS_IMAGE_INDEX);
 
@@ -95,7 +97,7 @@ namespace CommunicationCAN_winform
 
             TreeNode attributes = new TreeNode(ATTRIBUTES_NAME, ATTRIBUTES_IMAGE_INDEX, ATTRIBUTES_IMAGE_INDEX);
 
-            foreach(var attribute in parser.AttributeDictionary)
+            foreach (var attribute in parser.AttributeDictionary)
             {
                 attributes.Nodes.Add(attribute.Key, attribute.Value.AttributeName, 1, 1);
             }
@@ -107,9 +109,9 @@ namespace CommunicationCAN_winform
                 valueTables.Nodes.Add(valueTable.Key, valueTable.Value.ValueTableName, 2, 2);
             }
 
-            treeView1.Nodes.Add(nodeNetwork);
-            treeView1.Nodes.Add(attributes);
-            treeView1.Nodes.Add(valueTables);
+            //treeView1.Nodes.Add(nodeNetwork);
+            //treeView1.Nodes.Add(attributes);
+            //treeView1.Nodes.Add(valueTables);
 
         }
 
@@ -122,7 +124,7 @@ namespace CommunicationCAN_winform
 
         private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            
+
             string itemString = e.Item.Text;
 
             uint selectedMessageID = (uint)e.Item.Tag;
@@ -149,7 +151,7 @@ namespace CommunicationCAN_winform
                 signalTable.Rows.Add(row);
             }
 
-            dataGridView1.DataSource = signalTable;
+            //dataGridView1.DataSource = signalTable;
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -158,7 +160,7 @@ namespace CommunicationCAN_winform
             if (e.Node.Parent == null)
             {
                 // Parent Node View
-                switch(e.Node.Text)
+                switch (e.Node.Text)
                 {
                     case NETWORKS_NODE_NAME:
                         displayNodesToWorkspace();
@@ -172,8 +174,8 @@ namespace CommunicationCAN_winform
                         displayValueTablesToWorkspace();
                         break;
 
-                    default: 
-                        Debug.Assert(false); 
+                    default:
+                        Debug.Assert(false);
                         break;
                 }
 
@@ -190,6 +192,20 @@ namespace CommunicationCAN_winform
 
         private void displayNodesToWorkspace()
         {
+            //BindingSource source = new BindingSource();
+            //source.DataSource = parser.NetworkNodeDictionary.Values;
+
+            //dataGridView1.AutoGenerateColumns = false;
+            //dataGridView1.AutoSize = true;
+            //dataGridView1.DataSource = source;
+
+            //// Initialize and add a text box column.
+            //DataGridViewColumn column = new DataGridViewTextBoxColumn();
+            //column.DataPropertyName = "NodeName";
+            //column.Name = "Node Name";
+            //dataGridView1.Columns.Add(column);
+
+
             DataTable signalTable = new DataTable();
 
             signalTable.Columns.Add("Node Name");
@@ -197,7 +213,8 @@ namespace CommunicationCAN_winform
 
             DataColumn column = new DataColumn();
             column.DataType = typeof(IList<SignalCAN>);
-            column.ColumnName = "Signal List";
+            column.ColumnName = "SignalList.SignalName";
+
             signalTable.Columns.Add(column);
 
 
@@ -206,19 +223,30 @@ namespace CommunicationCAN_winform
                 DataRow row = signalTable.NewRow();
 
                 row[0] = node.Value.NodeName;
-                row[1] = node.Value.SignalList;
+                row[1] = node.Value.SignalList.ToArray();
 
                 signalTable.Rows.Add(row);
             }
 
-            dataGridView1.Columns[1].Width = 100;
 
-            dataGridView1.DataSource = signalTable;
+            //dataGridView1.DataSource = signalTable;
+
+            //dataGridView1.Columns[1].Width = 500;
+
         }
 
         private void displayAttributesToWorkspace()
         {
-
+            //DataGridView dataGridView2 = new DataGridView();
+            //DataGridViewRolloverCellColumn col =
+            //    new DataGridViewRolloverCellColumn();
+            //dataGridView1.Columns.Add(col);
+            //dataGridView1.Rows.Add(new string[] { "" });
+            //dataGridView1.Rows.Add(new string[] { "" });
+            //dataGridView1.Rows.Add(new string[] { "" });
+            //dataGridView1.Rows.Add(new string[] { "" });
+            //this.Controls.Add(dataGridView2);
+            //this.Text = "DataGridView rollover-cell demo";
         }
 
         private void displayValueTablesToWorkspace()
@@ -228,12 +256,58 @@ namespace CommunicationCAN_winform
 
         private void displayCANMessageToWorkspace()
         {
-            
+
         }
 
         #endregion
 
         #endregion
 
+        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            //if ((dataGridView1.Rows[e.RowIndex].DataBoundItem != null) && (dataGridView1.Columns[e.ColumnIndex].DataPropertyName.Contains(".")))
+            //{
+            //    e.Value = bindProperty(
+            //                  dataGridView1.Rows[e.RowIndex].DataBoundItem,
+            //                  dataGridView1.Columns[e.ColumnIndex].DataPropertyName
+            //                );
+            //}
+        }
+
+        private string bindProperty(object property, string propertyName)
+        {
+            string retValue = "";
+
+            if (propertyName.Contains("."))
+            {
+                PropertyInfo[] arrayProperties;
+                string leftPropertyName;
+
+                leftPropertyName = propertyName.Substring(0, propertyName.IndexOf("."));
+                arrayProperties = property.GetType().GetProperties();
+
+                foreach (PropertyInfo propertyInfo in arrayProperties)
+                {
+                    if (propertyInfo.Name == leftPropertyName)
+                    {
+                        retValue = bindProperty(
+                          propertyInfo.GetValue(property, null),
+                          propertyName.Substring(propertyName.IndexOf(".") + 1));
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                Type propertyType;
+                PropertyInfo propertyInfo;
+
+                propertyType = property.GetType();
+                propertyInfo = propertyType.GetProperty(propertyName);
+                retValue = propertyInfo.GetValue(property, null).ToString();
+            }
+
+            return retValue;
+        }
     }
 }
