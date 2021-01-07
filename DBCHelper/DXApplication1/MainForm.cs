@@ -104,7 +104,8 @@ namespace DXApplication1
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            //treeList1.DataSource = new object();
+            treeList1.DataSource = new object();
+           
         }
 
 
@@ -121,13 +122,19 @@ namespace DXApplication1
         {
             DirectoryInfo di = new DirectoryInfo((string)e.Node);
             if (e.Column == treeListColumn1)
+            {
                 e.CellData = di.Name;
+            }
             if (e.Column == treeListColumn2)
             {
                 if (!IsFile(di))
+                {
                     e.CellData = "Folder";
+                }
                 else
+                {
                     e.CellData = "File";
+                }
             }
             if (e.Column == treeListColumn3)
             {
@@ -135,8 +142,23 @@ namespace DXApplication1
                 {
                     e.CellData = new FileInfo((string)e.Node).Length;
                 }
-                else e.CellData = null;
+                else
+                {
+                    e.CellData = null;
+                }
             }
+
+
+            treeList1.BeginUpdate();
+
+            var column = new DevExpress.XtraTreeList.Columns.TreeListColumn();
+            column.Name = "ADDED";
+            column.MinWidth = 100;
+            column.Visible = true;
+            column.VisibleIndex = treeList1.VisibleColumns.Count;
+            treeList1.Columns.Add(column);
+
+            treeList1.EndUpdate();
         }
 
         // Creates and initializes child nodes.
