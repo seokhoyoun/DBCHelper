@@ -19,7 +19,7 @@ namespace DXApplication1
             DevExpress.Skins.SkinManager.EnableFormSkins();
             DevExpress.UserSkins.BonusSkins.Register();
 
-            Application.Run(new MainForm());
+            Application.Run(new FluentDesignForm1());
         }
     }
 }

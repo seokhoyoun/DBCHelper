@@ -1,4 +1,5 @@
 ﻿using DBCHelper;
+using DevExpress.XtraEditors;
 using System;
 using System.Drawing;
 using System.IO;
@@ -34,13 +35,20 @@ namespace DXApplication1
 
         protected override void OnLoad(EventArgs e)
         {
+
             InitializeCAN();
 
             InitializeTreeView();
 
 
             base.OnLoad(e);
+            this.FormBorderEffect = DevExpress.XtraEditors.FormBorderEffect.Glow;
+            this.ActiveGlowColor = Color.Red;
+            
+            WindowsFormsSettings.FormThickBorder = true;
+            WindowsFormsSettings.ThickBorderWidth = 5;
 
+            this.ShowMdiChildCaptionInParentTitle = true;
         }
 
         public void InitializeCAN()
@@ -104,7 +112,7 @@ namespace DXApplication1
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            treeList1.DataSource = new object();
+            //treeList1.DataSource = new object();
            
         }
 

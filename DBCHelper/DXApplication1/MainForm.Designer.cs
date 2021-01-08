@@ -57,7 +57,7 @@ namespace DXApplication1
             this.ribbonControl1.MaxItemId = 1;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.TabletOffice;
-            this.ribbonControl1.Size = new System.Drawing.Size(1258, 27);
+            this.ribbonControl1.Size = new System.Drawing.Size(1250, 25);
             // 
             // treeView1
             // 
@@ -109,7 +109,7 @@ namespace DXApplication1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1258, 628);
+            this.ClientSize = new System.Drawing.Size(1250, 628);
             this.Controls.Add(this.treeList1);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.ribbonControl1);
