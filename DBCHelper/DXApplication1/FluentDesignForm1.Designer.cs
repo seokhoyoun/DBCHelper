@@ -44,6 +44,8 @@ namespace DXApplication1
             this.skinPaletteDropDownButtonItem2 = new DevExpress.XtraBars.SkinPaletteDropDownButtonItem();
             this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
             this.fluentFormDefaultManager1 = new DevExpress.XtraBars.FluentDesignSystem.FluentFormDefaultManager(this.components);
+            this.skinDropDownButtonItem1 = new DevExpress.XtraBars.SkinDropDownButtonItem();
+            this.skinPaletteDropDownButtonItem3 = new DevExpress.XtraBars.SkinPaletteDropDownButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.accordionControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fluentDesignFormControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fluentFormDefaultManager1)).BeginInit();
@@ -104,14 +106,16 @@ namespace DXApplication1
             this.barLargeButtonItem2,
             this.skinPaletteDropDownButtonItem1,
             this.skinPaletteDropDownButtonItem2,
-            this.barButtonItem1});
+            this.barButtonItem1,
+            this.skinDropDownButtonItem1,
+            this.skinPaletteDropDownButtonItem3});
             this.fluentDesignFormControl1.Location = new System.Drawing.Point(0, 0);
             this.fluentDesignFormControl1.Manager = this.fluentFormDefaultManager1;
             this.fluentDesignFormControl1.Name = "fluentDesignFormControl1";
             this.fluentDesignFormControl1.Size = new System.Drawing.Size(943, 26);
             this.fluentDesignFormControl1.TabIndex = 2;
             this.fluentDesignFormControl1.TabStop = false;
-            this.fluentDesignFormControl1.TitleItemLinks.Add(this.skinPaletteDropDownButtonItem2);
+            this.fluentDesignFormControl1.TitleItemLinks.Add(this.skinDropDownButtonItem1);
             // 
             // barLargeButtonItem1
             // 
@@ -156,8 +160,23 @@ namespace DXApplication1
             this.barLargeButtonItem2,
             this.skinPaletteDropDownButtonItem1,
             this.skinPaletteDropDownButtonItem2,
-            this.barButtonItem1});
-            this.fluentFormDefaultManager1.MaxItemId = 5;
+            this.barButtonItem1,
+            this.skinDropDownButtonItem1,
+            this.skinPaletteDropDownButtonItem3});
+            this.fluentFormDefaultManager1.MaxItemId = 7;
+            // 
+            // skinDropDownButtonItem1
+            // 
+            this.skinDropDownButtonItem1.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right;
+            this.skinDropDownButtonItem1.Id = 5;
+            this.skinDropDownButtonItem1.Name = "skinDropDownButtonItem1";
+            // 
+            // skinPaletteDropDownButtonItem3
+            // 
+            this.skinPaletteDropDownButtonItem3.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right;
+            this.skinPaletteDropDownButtonItem3.Enabled = false;
+            this.skinPaletteDropDownButtonItem3.Id = 6;
+            this.skinPaletteDropDownButtonItem3.Name = "skinPaletteDropDownButtonItem3";
             // 
             // FluentDesignForm1
             // 
@@ -193,5 +212,7 @@ namespace DXApplication1
         private DevExpress.XtraBars.BarButtonItem barButtonItem1;
         private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElement3;
         private DevExpress.XtraBars.Navigation.AccordionControlElement accordionControlElement4;
+        private DevExpress.XtraBars.SkinDropDownButtonItem skinDropDownButtonItem1;
+        private DevExpress.XtraBars.SkinPaletteDropDownButtonItem skinPaletteDropDownButtonItem3;
     }
 }

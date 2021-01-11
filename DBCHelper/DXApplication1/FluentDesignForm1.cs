@@ -1,13 +1,9 @@
 ﻿using DBCHelper;
-using DevExpress.XtraBars;
 using DevExpress.XtraBars.Navigation;
+using DevExpress.XtraSplashScreen;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DXApplication1
@@ -37,9 +33,12 @@ namespace DXApplication1
         {
             InitializeComponent();
 
+         
+
             InitializeCAN();
 
             InitializeTreeView();
+
         }
 
         public void InitializeCAN()
@@ -81,7 +80,9 @@ namespace DXApplication1
                 tempNodeElement.Tag = node.Value;
                 tempNodeElement.Text = node.Value.NodeName;
 
-                accordionControl1.ElementClick += AccordionControl1_ElementClick;
+                //accordionControl1.ElementClick += AccordionControl1_ElementClick;
+
+                tempNodeElement.Click += TempNodeElement_Click;
 
                 rangeArr[rangeArrIndex++] = tempNodeElement;
             }
@@ -115,9 +116,54 @@ namespace DXApplication1
 
         }
 
+        private void TempNodeElement_Click(object sender, EventArgs e)
+        {
+            InitOverlay();
+        }
+
         private void AccordionControl1_ElementClick(object sender, ElementClickEventArgs e)
         {
-            throw new NotImplementedException();
+            InitOverlay();
+        }
+
+        IOverlaySplashScreenHandle ShowProgressPanel()
+        {
+            if (this.IsHandleCreated)
+            {
+                //SplashScreenManager.ShowSkinSplashScreen();
+                return SplashScreenManager.ShowOverlayForm(this);
+            }
+            return null;
+        }
+        void CloseProgressPanel(IOverlaySplashScreenHandle handle)
+        {
+            if (handle != null)
+                SplashScreenManager.CloseOverlayForm(handle);
+        }
+        void InitOverlay()
+        {
+
+            //...
+            IOverlaySplashScreenHandle handle = null;
+            try
+            {
+                handle = ShowProgressPanel();
+
+                for (int i = 0; i < 159; i++)
+                {
+                    for (int j = 0; j < 209; j++)
+                    {
+                        Console.WriteLine(i + j);
+                    }
+                }
+            
+                // Launch a long-running operation while
+                // the Overlay Form overlaps the current form.
+            }
+            finally
+            {
+                CloseProgressPanel(handle);
+            }
         }
     }
 }
