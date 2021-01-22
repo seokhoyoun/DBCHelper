@@ -53,6 +53,8 @@ namespace DXApplication1
 
                 parser.ClearCollections();
 
+                
+
                 parser.LoadFile(filePath);
 
             }
@@ -118,7 +120,12 @@ namespace DXApplication1
 
         private void TempNodeElement_Click(object sender, EventArgs e)
         {
-            InitOverlay();
+            var tag = ((AccordionControlElement)sender).Tag;
+
+            if(tag.GetType() == typeof(NetworkNodeCAN))
+            {
+                fluentDesignFormContainer1.Container.Add(new NodeViewControl());
+            }
         }
 
         private void AccordionControl1_ElementClick(object sender, ElementClickEventArgs e)
@@ -149,14 +156,7 @@ namespace DXApplication1
             {
                 handle = ShowProgressPanel();
 
-                for (int i = 0; i < 159; i++)
-                {
-                    for (int j = 0; j < 209; j++)
-                    {
-                        Console.WriteLine(i + j);
-                    }
-                }
-            
+              
                 // Launch a long-running operation while
                 // the Overlay Form overlaps the current form.
             }
