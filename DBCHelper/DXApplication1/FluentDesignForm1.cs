@@ -53,8 +53,6 @@ namespace DXApplication1
 
                 parser.ClearCollections();
 
-                
-
                 parser.LoadFile(filePath);
 
             }
